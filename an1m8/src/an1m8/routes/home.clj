@@ -3,7 +3,7 @@
                       [an1m8.layout :as layout]
                       [an1m8.util :as util]
                       [compojure.core :refer :all]
-                      [noir.response :refer [edn]]
+                      [noir.response :refer [edn xml]]
                       [clojure.pprint :refer [pprint]]
                       [noir.io :as io]
                       [noir.response :as resp]
@@ -58,7 +58,7 @@
          (resp/redirect file-url)))
 
   (GET "/files/:filename" [filename]
-       (content-type (str resource-path filename))  "xml")
+       (xml (slurp (str resource-path filename))))
 
   (POST "/save" {:keys [body-params]}
     (edn (save-document body-params)))
