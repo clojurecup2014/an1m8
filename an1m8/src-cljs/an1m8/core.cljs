@@ -37,14 +37,24 @@
 (d/on-load (fn[]
 ; does not work in ie :)
 
-               (enable-console-print!)
-               (println "Junta Power!")
+             (enable-console-print!)
+             (println "Junta Power!")
+
+             (let [logos [(d/by-id "logo") (d/by-id "logo-light") (d/by-id "logo-3d")]]
+                (doseq [logo logos]
+                    (s/fix-viewBox! (d/svg-doc logo))
+                    (d/scale-el! logo 0.5)
+                  )
 
 
+
+               )
+               ; svg
+               ; animation
                (a/animation (d/by-id "circle") "[fill]")
 
-               (a/animation (d/svg-doc (d/by-id "logo_4")) "path")
-;               (a/test-core-async)
+               ;(a/animation (d/svg-doc (d/by-id "logo_4")) "path")
+               ;(a/test-core-async)
              ))
 
 

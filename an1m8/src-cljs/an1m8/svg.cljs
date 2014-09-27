@@ -29,10 +29,13 @@
 (defn fix-viewBox! [svg]
    (let [root (svg-root svg)
          viewBox (base-val root "viewBox")]
+     (.log js/console root)
+     (.log js/console viewBox)
+
      (if (empty-rect? viewBox)
        (let [h (len root "height")
              w (len root "width")]
-         ;;(.log js/console (str "0 0 " w " " h " "))
+         (.log js/console (str "0 0 " w " " h " ")) ; todo: fix this if there is left & top in svg
 
          (.setAttribute root "viewBox" (str "0 0 " w " " h " "))))))
 
