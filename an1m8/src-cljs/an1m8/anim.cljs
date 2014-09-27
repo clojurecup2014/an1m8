@@ -42,17 +42,8 @@
            [next-op next-i])
          ) params))
 
-
-  ; next frame
-   ;((f 0))
- ;  ((f :asc 0)) ; [:asc 1]
- ;  ((f :asc 5)) ; [:asc 6]
- ;  ((f :asc 9)) ; [:desc 9]
-
-   ; previous frame
- ;  ((f :desc 9)) ; [:desc 8]
- ;  ((f :desc 6)) ; [:desc 5]
- ;  ((f :desc 0)) ; [:asc 0]
+; will println frame numbers '(0 5 9 6 0) and return the following next steps
+; [:asc 1] [:asc 6] [:desc 9] [:desc 8] [:desc 5] [:asc 0]
 
 
 
