@@ -34,7 +34,7 @@
 
 (defn tag-match [tag]
   (fn [el]
-    (when-let [tag-name (.-tagName el)]
+  	(when-let [tag-name (.-tagName el)]
       (= tag (.toLowerCase tag-name)))))
 
 (defn parent [el tag]
@@ -65,3 +65,8 @@
 
 (defn on-load [handler]
     (aset js/document "onreadystatechange" (doc-ready-handler handler)))
+
+(defn scale-el! [el scale]
+  ; multiple transforms?
+  (set-style! el "transform" (str "scale(" scale "," scale ")" )))
+

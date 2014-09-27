@@ -25,14 +25,13 @@
   (aget (.-children svg) 0))
 
 
- (defn fix-viewBox! [svg]
+(defn fix-viewBox! [svg]
    (let [root (svg-root svg)
          viewBox (base-val root "viewBox")]
      (if (empty-rect? viewBox)
        (let [h (len root "height")
              w (len root "width")]
-         (.setAttribute root "viewBox" (str "0 0 " w " " h))))
-     )
-   )
+         (.setAttribute root "viewBox" (str "0 0 " w " " h))))))
+
 
 

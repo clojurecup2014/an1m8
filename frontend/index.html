@@ -17,17 +17,20 @@
     <p>Test svg viewBox fix</p>
         <div class="svg-wrapper">
             <object id="logo_2" data="2.svg" type="image/svg+xml"
-                style="" class="fill-w"></object>
+                class="fill-w"
+				style="border: 1px solid blue;"
+                ></object>
         </div>
 
 
         <div class="svg-wrapper">
             <object id="logo_1" data="1.svg" type="image/svg+xml"
-                style="" class="fill-w"></object>
+                class="fill-w"></object>
         </div>
 
-        <button onclick="frontend.core.test_svg('logo_1'); frontend.core.test_svg('logo_2');">Fix</button>
+        <button onclick="frontend.core.test_svg('logo_1'); frontend.core.test_svg('logo_2');">Fix Viewport</button>
 
+        <button onclick="frontend.core.test_scaling('logo_2')">Test scaling</button>
 
     </body>
 </html>
