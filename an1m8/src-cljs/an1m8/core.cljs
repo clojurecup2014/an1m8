@@ -43,15 +43,21 @@
              (let [logos (map d/by-id ["logo" "logo-light" "logo-3d" "logo-solid-1"])]
                 (doseq [logo logos]
                     (s/fix-viewBox! (d/svg-doc logo))
-                    (d/scale-el! logo 0.5)
-                  )
+                    (d/scale-el! logo 0.5)))
+
+               (let [timing (constantly 1500)
+                     frame-f (a/keyframe-f 10 identity)
+                     consume-f println
+                     ]
+
+                 (a/an1m timing frame-f consume-f)
+
+                 )
 
 
-
-               )
                ; svg
                ; animation
-               (a/animation (d/by-id "circle") "[fill]")
+               ; (a/animation (d/by-id "circle") "[fill]")
 
                ;(a/animation (d/svg-doc (d/by-id "logo_4")) "path")
                ;(a/test-core-async)

@@ -15,29 +15,29 @@
 ; (step-function from to total) -> (fn [frame]) -> [:asc/:desc frame]
 ;                                  (fn [op frame]) -> does the animation
 
-(defn keyframe-f [animation-fn total]
+(defn keyframe-f [total animation-f]
   "creates a looped function (state machine?) that will go indefinitely from zero to total and vice versa.
-  (f op frame) will returns next op and frame
-  (f frame) executes the animation-fn
-  where frame is a frame number (zero-based) and op is :asc or :desc keyword"
-  (fn ([frame]
-       (animation-fn frame))
+  (f) returns default op and starting frame, frame number is zero-based and op is :asc or :desc keyword
+  (f frame) executes the animation-f
+  (f op frame) will returns next op and frame "
+  (fn ([] [:asc 0])
+      ([frame]
+       (animation-f frame))
       ([op frame]
-       (fn []
-         (cond (and (= 0 frame)
+       (cond (and (= 0 frame)
                     (= :desc op)) [:asc frame]
                (= :desc op) [:desc (dec frame)]
                (and (= :asc op)
                     (= total (inc frame))) [:desc frame]
-               (= :asc op) [:asc (inc frame)])))))
+               (= :asc op) [:asc (inc frame)]))))
 
 
-#_(let [f! (keyframe-f println 10)
+#_(let [f! (keyframe-f 10 println )
       params '([:asc 0] [:asc 5] [:asc 9]
                [:desc 9] [:desc 6] [:desc 0])]
 
   (map (fn [[op i]]
-         (let [[next-op next-i] ((f! op i))]
+         (let [[next-op next-i] (f! op i)]
            (f! i)
            [next-op next-i])
          ) params))
@@ -46,11 +46,35 @@
 ; [:asc 1] [:asc 6] [:desc 9] [:desc 8] [:desc 5] [:asc 0]
 
 
+; animation fn consist of timing and animation
 
 
-;((step-function _ 10 _ _) 2)
+; f is keyframe func
 
-; ((step-function 1 1 1 1) 1 2)
+; timing-f total is a step function
+(defn an1m [timing-f frame-f consume-f]
+  (let [c (chan 10) ; 100 is a buffer
+        c1 (chan)]
+
+    ; init
+    (go (>! c1 (frame-f)))
+
+    ; produce
+    (go (while true
+          (let [[op i] (<! c1)]
+            (<! (timeout (timing-f i)))
+            (>! c (frame-f i))
+            (go (>! c1 (frame-f op i)))
+            )))
+
+    ; consume
+    (go (while true
+         (let [data (<! c)]
+            (consume-f data))))
+
+    ))
+
+
 
 ; older stuff
 
