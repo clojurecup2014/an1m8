@@ -9,8 +9,17 @@
 ;
 
 
-(enable-console-print!) ; does not work in ie :)
+;;;;;;;;;;
+;
+; tests
 
-(println "Junta Power!")
+;(a/test-core-async)
 
-(a/test-core-async)
+
+;;;;;;;;;;;
+;
+; main
+
+(dom/on-load (fn[]
+               (enable-console-print!) ; does not work in ie :)
+               (println "Junta Power!")))
