@@ -50,17 +50,13 @@
                      consume-f println
                      ]
 
-                 (a/an1m timing frame-f consume-f)
-
-                 )
+                 (a/an1m timing frame-f consume-f))
 
 
                ; svg
-               ; animation
-               ; (a/animation (d/by-id "circle") "[fill]")
-
-               ;(a/animation (d/svg-doc (d/by-id "logo_4")) "path")
-               ;(a/test-core-async)
+               (a/animation (d/by-id "circle") "[fill]")
+               (a/animation (d/svg-doc (d/by-id "logo_4")) "path")
+               (a/test-core-async)
              ))
 
 
