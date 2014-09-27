@@ -7,11 +7,28 @@ server configuration:
 
     ✔ github auth keys @done (14-09-27 06:43)
     
+    ? inline svg for browsers that doesn't support object
+
 backend:
 
 
 frontend:
 
- ☐ project boilerplate
+ ✔ project boilerplate @done (14-09-27 10:46)
+  ☐ connect app to a backend
+  dom/svg utils 
+  ☐ scaling
+  ☐ fitting
+    ✔ fit width — via style @done (14-09-27 10:48)
+    ☐ fit height —  
+     ? min width
+  ☐ centering svg — fit width + scale
+  ☐ tiling
+  ✔ viewBox fix @done (14-09-27 10:47)
+
+animation engine:
+  ☐ scalling fuctions
 
 design:
+
+  ☐ logo draft
