@@ -6,6 +6,18 @@
 
         <title>AN1M8</title>
 
+
+    {% if dev %}
+      <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.11.0/react.js"></script> -->
+      {% script "/js/goog/base.js" %}
+      {% script "/js/app.js" %}
+      <script type="text/javascript">goog.require("an1m8.core");</script>
+    {% else %}
+      <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.11.0/react.min.js"></script> -->
+      {% script "/js/app.js" %}
+    {% endif %}
+
+
     </head>
     <body>
 
@@ -106,6 +118,59 @@
 
         <hr>
 
+
+    <h1>AN1M8</h1>
+
+<!--    <p>Test loading svg via url</p>
+    <object id="logo_1" data="1.svg" type="image/svg+xml"
+            style=""></object> -->
+
+        <p>Test svg viewBox fix</p>
+
+        <h2>Best fit</h2>
+
+    <div class="safari">
+        <object id="logo_4" data="/svg/1.svg" type="image/svg+xml"
+                class=""></object>
+        </div>
+
+
+        <h2>Vertical</h2>
+
+        <div class="svg-wrapper h_1_3">
+            <object id="logo_3" data="/svg/2.svg" type="image/svg+xml"
+                    class="fill-h"
+                    style="border: 1px solid blue;"
+                    ></object>
+        </div>
+        <button onclick="an1m8.core.test_scaling('logo_3', 0.33)">Test scaling</button>
+
+
+        <h2>Horizontal</h2>
+
+        <div class="svg-wrapper w_1_3">
+            <object id="logo_2" data="/svg/2.svg" type="image/svg+xml"
+                    class="fill-w"
+                    style="border: 1px solid blue;"
+                    ></object>
+        </div>
+
+        <div class="svg-wrapper w_1_3">
+            <object id="logo_1" data="/svg/1.svg" type="image/svg+xml"
+                    class="fill-w"></object>
+        </div>
+
+        <button onclick="an1m8.core.test_svg('logo_1'); an1m8.core.test_svg('logo_2');">Fix Viewport</button>
+
+        <button onclick="an1m8.core.test_scaling('logo_2', 0.5)">Test scaling</button>
+
+        <hr>
+
+        <div style="min-height: 1000px; backround-color: rgba(128,128,128,0.33);">foo</div>
+
+<hr>
+
+
     {% block content %}
     {% endblock %}
 
@@ -113,15 +178,6 @@
     <script type="text/javascript">
         var context = "{{servlet-context}}";
     </script>
-    {% if dev %}
-      <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.11.0/react.js"></script> -->
-      {% script "/js/goog/base.js" %}
-      {% script "/js/app.js" %}
-      <script type="text/javascript">goog.require("an1m8.core");</script>
-    {% else %}
-      <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.11.0/react.min.js"></script> -->
-      {% script "/js/app.js" %}
-    {% endif %}
 
 
     </body>
