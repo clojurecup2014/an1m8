@@ -15,30 +15,24 @@
 ; (step-function from to total) -> (fn [frame]) -> [:asc/:desc frame]
 ;                                  (fn [op frame]) -> does the animation
 
-(defn keyframe-f [frame-fn total]
-  "creates a step function.
-  (f operation frame) returns a zero arity function that returns next step
-  "
-  (fn ([i]
-       (frame-fn i))
-      ([op i]
+(defn keyframe-f [animation-fn total]
+  "creates a looped function (state machine?) that will go indefinitely from zero to total and vice versa.
+  (f op frame) will returns next op and frame
+  (f frame) executes the animation-fn
+  where frame is a frame number (zero-based) and op is :asc or :desc keyword"
+  (fn ([frame]
+       (animation-fn frame))
+      ([op frame]
        (fn []
-         (cond (and (= 0 i)
-                    (= :desc op)) [:asc i]
-
-               (= :desc op) [:desc (dec i)]
-
+         (cond (and (= 0 frame)
+                    (= :desc op)) [:asc frame]
+               (= :desc op) [:desc (dec frame)]
                (and (= :asc op)
-                    (= total (inc i))) [:desc i]
-
-               (= :asc op) [:asc (inc i)])
-         )
-     )
-    )
-  )
+                    (= total (inc frame))) [:desc frame]
+               (= :asc op) [:asc (inc frame)])))))
 
 
-(let [f! (keyframe-f println 10)
+#_(let [f! (keyframe-f println 10)
       params '([:asc 0] [:asc 5] [:asc 9]
                [:desc 9] [:desc 6] [:desc 0])]
 
@@ -46,8 +40,7 @@
          (let [[next-op next-i] ((f! op i))]
            (f! i)
            [next-op next-i])
-         ) params)
-)
+         ) params))
 
 
   ; next frame
