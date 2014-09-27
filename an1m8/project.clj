@@ -41,7 +41,10 @@
    {:dependencies
     [[ring-mock "0.1.5"]
      [ring/ring-devel "1.3.1"]
-     [pjstadig/humane-test-output "0.6.0"]],
+     [pjstadig/humane-test-output "0.6.0"]
+     [org.clojure/core.cache "0.6.3"]
+     [org.clojure/core.memoize "0.5.6" :exclusions [org.clojure/core.cache]]
+     [com.cemerick/friend "0.2.1"]],
     :injections
     [(require 'pjstadig.humane-test-output)
      (pjstadig.humane-test-output/activate!)],
@@ -75,4 +78,4 @@
    [im.chit/cronj "1.4.2"]]
   :repl-options
   {:init-ns an1m8.repl}
-  :min-lein-version "2.0.0")
+  :min-lein-version "2.5.0")
