@@ -54,7 +54,7 @@
          (resp/redirect file-url)))
 
   (GET "/files/:filename" [filename]
-       (file-response (str resource-path filename)))
+       (content-type (str resource-path filename))  "xml")
 
   (POST "/save" {:keys [body-params]}
     (edn (save-document body-params)))
