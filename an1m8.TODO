@@ -4,6 +4,9 @@ server configuration:
     ✔ proxying nginx  @done (14-09-27 06:38)
     ✔ git & github account @done (14-09-27 06:39)
     ☐ GOR: make lein ring uberjar work
+
+    ✔ github auth keys @done (14-09-27 06:43)
+    
 backend:
 
 
