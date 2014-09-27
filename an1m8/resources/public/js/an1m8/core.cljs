@@ -4,6 +4,8 @@
                        :include-macros true :refer [defroute]]
                       [ajax.core :refer [POST]]))
 
+(js/alert "Foo")
+
 (def state (atom {:doc {} :saved? false}))
 
 (defn set-value! [id value]

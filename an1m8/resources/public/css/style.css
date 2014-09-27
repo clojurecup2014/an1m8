@@ -1,0 +1,29 @@
+body {
+  padding: 1em;
+  font-family: Helvetica;
+  line-height: 140%;
+}
+
+button {
+  vertical-align: top;
+  padding: 1em;
+}
+
+.svg-wrapper {
+  min-width: 33%;
+  width: 33%;
+
+  border: 1px solid red;
+  box-sizing: border-box;
+  display: inline-block;
+}
+
+.svg-wrapper object {
+  display: inline;
+}
+
+.svg-wrapper .fill-w {
+  width: 100%;
+}
+
+

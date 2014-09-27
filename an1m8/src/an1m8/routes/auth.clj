@@ -3,6 +3,7 @@
   (:require [an1m8.layout :as layout]
             [noir.session :as session]
             [noir.response :as resp]
+            [noir.util.middleware :refer [app-handler]]
             [noir.validation :as vali]
             [noir.util.crypt :as crypt]
             [an1m8.db.core :as db])
@@ -70,6 +71,7 @@
   (resp/redirect "/"))
 
 (defroutes auth-routes
+
   (GET "/register" []
        (register))
 
@@ -77,9 +79,9 @@
         (handle-registration id pass pass1))
 
   (GET "/profile" [] (profile))
-  
+
   (POST "/update-profile" {params :params} (update-profile params))
-  
+
   (GET "/login" req
         (handle-login (get-in req [:headers "authorization"])))
 
