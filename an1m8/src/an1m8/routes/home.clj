@@ -8,7 +8,7 @@
                       [noir.io :as io]
                       [noir.response :as resp]
                       [noir.util.middleware :refer [app-handler]]
-                      [ring.util.response :refer [file-response]]))
+                      [ring.util.response :refer [content-type]]))
 
 (defn- render[args]
   (layout/render "an1m8.html" args))
