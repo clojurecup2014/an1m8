@@ -36,8 +36,15 @@
 
 (d/on-load (fn[]
 ; does not work in ie :)
+
                (enable-console-print!)
                (println "Junta Power!")
+
+
+               (a/animation (d/by-id "circle") "[fill]")
+
+               (a/animation (d/svg-doc (d/by-id "logo_4")) "path")
+;               (a/test-core-async)
              ))
 
 

@@ -17,6 +17,12 @@
 (defn home-page []
       (render {
                ;:docs (util/md->html "/md/docs.md")
+               :svg "<svg id=\"circle\" height=\"240\" width=\"240\">
+                    <circle cx=\"120\" cy=\"120\" r=\"90\"
+                            stroke=\"black\" stroke-width=\"45\" fill=\"rgba(255,0,0,0.77)\"
+                            />
+                    Sorry, your browser does not support inline SVG.
+                </svg>"
               }))
 
 
