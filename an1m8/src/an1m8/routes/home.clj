@@ -13,6 +13,10 @@
       (layout/render
         "app.html" {:docs (util/md->html "/md/docs.md")}))
 
+(defn upload-page []
+      (layout/render
+        "upload.html"))
+
 (defn save-document [doc]
       (pprint doc)
       {:status "ok"})
@@ -23,12 +27,9 @@
 
   (GET "/" [] (home-page))
 
-  (GET "/upload" []
-       (layout/render "upload.html"))
+  (GET "/upload" [] (upload-page))
 
   (POST "/upload" [file]
-        ;; file with same name will be overwrited, so in production mode , gen a
-        ;; random string as filename
        (io/upload-file resource-path file)
        (resp/redirect
          (str "/files/" (:filename file))))
