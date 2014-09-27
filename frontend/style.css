@@ -3,3 +3,8 @@ body {
   font-family: Helvetica;
   line-height: 140%;
 }
+
+button {
+  vertical-align: top;
+  padding: 1em;
+}

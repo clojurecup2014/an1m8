@@ -1,6 +1,8 @@
 (ns frontend.core
-	(:require [frontend.dom :as dom]
-            [frontend.anim :as a]))
+  "I do stuff"
+	(:require [frontend.dom :as d]
+            [frontend.anim :as a]
+            [frontend.svg :as s]))
 
 ;
 ;
@@ -15,11 +17,24 @@
 
 ;(a/test-core-async)
 
+(defn ^:export test_svg [id]
+  (let [el (d/by-id id)
+        svg (.getSVGDocument el)]
+    (if svg
+      (do
+        (.log js/console svg)
+        )
+      (js/alert "Error while loading svg")
+      ))
+  )
 
 ;;;;;;;;;;;
 ;
 ; main
 
-(dom/on-load (fn[]
+(d/on-load (fn[]
                (enable-console-print!) ; does not work in ie :)
-               (println "Junta Power!")))
+               (println "Junta Power!")
+             ))
+
+
