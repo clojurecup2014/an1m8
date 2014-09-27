@@ -1,0 +1,14 @@
+server configuration:
+    ✔ access @done (14-09-27 06:38)
+    ✔ java @done (14-09-27 06:38)
+    ✔ proxying nginx  @done (14-09-27 06:38)
+    ✔ git & github account @done (14-09-27 06:39)
+    ☐ GOR: make lein ring uberjar work
+backend:
+
+
+frontend:
+
+ ☐ project boilerplate
+
+design:
