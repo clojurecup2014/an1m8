@@ -10,10 +10,12 @@ button {
 }
 
 .svg-wrapper {
-  min-width: 50%;
-  width: 50%;
+  min-width: 33%;
+  width: 33%;
 
   border: 1px solid red;
+  box-sizing: border-box;
+  display: inline-block;
 }
 
 .svg-wrapper object {
