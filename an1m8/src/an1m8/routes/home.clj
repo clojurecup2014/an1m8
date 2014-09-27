@@ -14,6 +14,11 @@
       (layout/render
         "app.html" {:docs (util/md->html "/md/docs.md")}))
 
+
+(defn index-page []
+      (layout/render
+       "index.html"))
+
 (defn upload-page []
       (layout/render
         "upload.html"))
@@ -27,6 +32,8 @@
 (defroutes home-routes
 
   (GET "/" [] (home-page))
+
+  (GET "/index" [] (index-page))
 
   (GET "/upload" [] (upload-page))
 
