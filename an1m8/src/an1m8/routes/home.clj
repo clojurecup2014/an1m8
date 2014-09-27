@@ -31,8 +31,10 @@
 
 
 (defn upload-page []
-      (layout/render
-        "upload.html"))
+  (layout/render "upload.html"))
+
+(defn debug-page []
+  (layout/render "lt.html"))
 
 (defn save-document [doc]
       ; (pprint doc)
@@ -42,6 +44,8 @@
 
 (defroutes home-routes
   (GET "/" [] (home-page))
+  (GET "/lt" [] (debug-page))
+
   ; (GET "/index" [] (index-page))
   (GET "/upload" [] (upload-page))
 

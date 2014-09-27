@@ -8,6 +8,68 @@
 	(:require-macros [cljs.core.async.macros :refer [go]]))
 
 
+;;;;;;;;;;;;;;;;;;
+;
+; kind of cycled step functions
+;
+; (step-function from to total) -> (fn [frame]) -> [:asc/:desc frame]
+;                                  (fn [op frame]) -> does the animation
+
+(defn keyframe-f [frame-fn total]
+  "creates a step function.
+  (f operation frame) returns a zero arity function that returns next step
+  "
+  (fn ([i]
+       (frame-fn i))
+      ([op i]
+       (fn []
+         (cond (and (= 0 i)
+                    (= :desc op)) [:asc i]
+
+               (= :desc op) [:desc (dec i)]
+
+               (and (= :asc op)
+                    (= total (inc i))) [:desc i]
+
+               (= :asc op) [:asc (inc i)])
+         )
+     )
+    )
+  )
+
+
+(let [f! (keyframe-f println 10)
+      params '([:asc 0] [:asc 5] [:asc 9]
+               [:desc 9] [:desc 6] [:desc 0])]
+
+  (map (fn [[op i]]
+         (let [[next-op next-i] ((f! op i))]
+           (f! i)
+           [next-op next-i])
+         ) params)
+)
+
+
+  ; next frame
+   ;((f 0))
+ ;  ((f :asc 0)) ; [:asc 1]
+ ;  ((f :asc 5)) ; [:asc 6]
+ ;  ((f :asc 9)) ; [:desc 9]
+
+   ; previous frame
+ ;  ((f :desc 9)) ; [:desc 8]
+ ;  ((f :desc 6)) ; [:desc 5]
+ ;  ((f :desc 0)) ; [:asc 0]
+
+
+
+
+;((step-function _ 10 _ _) 2)
+
+; ((step-function 1 1 1 1) 1 2)
+
+; older stuff
+
 (defn nth-val[start end n]
   (let [N (if (< n 2) 2 (- n 1))]
     (-> end (+ start) (/ N))))
@@ -21,6 +83,13 @@
 (def long-step (partial step-fn long))
 
 (def float-step (partial step-fn identity))
+
+
+
+
+
+
+
 
 ;;;;;;;;;;;;;;
 ; animations
