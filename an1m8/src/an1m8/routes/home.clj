@@ -10,31 +10,33 @@
                       [noir.util.middleware :refer [app-handler]]
                       [ring.util.response :refer [file-response]]))
 
+(defn- render[args]
+  (layout/render "an1m8.html" args))
+
+
 (defn home-page []
-      (layout/render
-        "app.html" {:docs (util/md->html "/md/docs.md")}))
+      (render {
+               ;:docs (util/md->html "/md/docs.md")
+              }))
 
 
-(defn index-page []
-      (layout/render
-       "index.html"))
+;(defn index-page []
+;      (render))
+
 
 (defn upload-page []
       (layout/render
         "upload.html"))
 
 (defn save-document [doc]
-      (pprint doc)
+      ; (pprint doc)
       {:status "ok"})
 
 (def resource-path "/tmp/")
 
 (defroutes home-routes
-
   (GET "/" [] (home-page))
-
-  (GET "/index" [] (index-page))
-
+  ; (GET "/index" [] (index-page))
   (GET "/upload" [] (upload-page))
 
   (POST "/upload" [file]
@@ -49,4 +51,8 @@
        (file-response (str resource-path filename)))
 
   (POST "/save" {:keys [body-params]}
-    (edn (save-document body-params))))
+    (edn (save-document body-params)))
+
+
+
+  )

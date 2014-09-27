@@ -52,6 +52,7 @@
   (cronj/shutdown! session-manager/cleanup-job)
   (timbre/info "shutdown complete!"))
 
+
 (def app
  (app-handler
    [auth-routes home-routes base-routes]
