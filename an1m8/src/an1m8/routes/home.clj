@@ -3,7 +3,11 @@
                       [an1m8.util :as util]
                       [compojure.core :refer :all]
                       [noir.response :refer [edn]]
-                      [clojure.pprint :refer [pprint]]))
+                      [clojure.pprint :refer [pprint]]
+                      [noir.io :as io]
+                      [noir.response :as response]
+                      [noir.util.middleware :refer [app-handler]]
+                      [ring.util.response :refer [file-response]]))
 
 (defn home-page []
       (layout/render
