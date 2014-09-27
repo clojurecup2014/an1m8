@@ -22,7 +22,8 @@
         svg (.getSVGDocument el)]
     (if svg
       (do
-        (.log js/console svg)
+        ;(.log js/console svg)
+        (s/fix-viewBox! svg)
         )
       (js/alert "Error while loading svg")
       ))

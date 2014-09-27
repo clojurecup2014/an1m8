@@ -8,3 +8,20 @@ button {
   vertical-align: top;
   padding: 1em;
 }
+
+.svg-wrapper {
+  min-width: 50%;
+  width: 50%;
+
+  border: 1px solid red;
+}
+
+.svg-wrapper object {
+  display: inline;
+}
+
+.svg-wrapper .fill-w {
+  width: 100%;
+}
+
+
