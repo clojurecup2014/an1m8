@@ -40,7 +40,7 @@
              (enable-console-print!)
              (println "Junta Power!")
 
-             (let [logos [(d/by-id "logo") (d/by-id "logo-light") (d/by-id "logo-3d")]]
+             (let [logos (map d/by-id ["logo" "logo-light" "logo-3d" "logo-solid-1"])]
                 (doseq [logo logos]
                     (s/fix-viewBox! (d/svg-doc logo))
                     (d/scale-el! logo 0.5)

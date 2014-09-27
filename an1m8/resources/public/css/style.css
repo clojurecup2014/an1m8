@@ -20,13 +20,13 @@ button {
   vertical-align: top;
 }
 
-.svg-wrapper .fill-w {
+.fill-w {
   width: 100%;
   min-width: 100%;
 }
 
 
-.svg-wrapper .fill-h {
+.fill-h {
   height: 100%;
 }
 
@@ -41,13 +41,4 @@ button {
   min-height: 33%;
 }
 
-.svg-wrapper #logo_1 {
-}
-
-#logo_1 {
-  opacity: 0.5;
-}
-
-#logo_1 svg {
-}
 
