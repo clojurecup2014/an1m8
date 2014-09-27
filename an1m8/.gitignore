@@ -12,3 +12,4 @@
 /out/
 /target/
 pom.xml
+resources/public/js/
