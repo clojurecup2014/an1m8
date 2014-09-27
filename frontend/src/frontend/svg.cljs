@@ -17,6 +17,10 @@
   (.-value (base-val el prop))) ; will units be pixels
 
 
+(defn- empty-rect? [r]
+  (or (nil? r)
+       (= 0 (.-width r) (.-height r) (.-x r) (.-y r))))
+
 ;(defn- svg-viewBox [el]
 ;  (let [vb (.-viewBox el)
 ;        v (.-baseVal el)]
@@ -25,16 +29,17 @@
 ;    ))
 
 
- (defn svg-root [svg]
+(defn svg-root [svg]
   (aget (.-children svg) 0))
 
 
  (defn fix-viewBox! [svg]
    (let [root (svg-root svg)
-         h (len root "height")
-         w (len root "width")
-         ]
-     (.log js/console (aget root "viewBox"))
+         viewBox (base-val root "viewBox")]
+     (if (empty-rect? viewBox)
+       (let [h (len root "height")
+             w (len root "width")]
+         (.setAttribute root "viewBox" (str "0 0 " w " " h))))
      )
    )
 
