@@ -1,5 +1,6 @@
 (ns an1m8.routes.home
-            (:require [an1m8.layout :as layout]
+            (:require [clj-time.coerce :as tc]
+                      [an1m8.layout :as layout]
                       [an1m8.util :as util]
                       [compojure.core :refer :all]
                       [noir.response :refer [edn]]
@@ -30,9 +31,12 @@
   (GET "/upload" [] (upload-page))
 
   (POST "/upload" [file]
-       (io/upload-file resource-path file)
-       (resp/redirect
-         (str "/files/" (:filename file))))
+      (let [{fname :filename} file
+            timed-name (str fname "-" (System/currentTimeMillis))
+            file-url (str "/files/" timed-name)
+            res (assoc file :filename timed-name)]
+         (io/upload-file resource-path res)
+         (resp/redirect file-url)))
 
   (GET "/files/:filename" [filename]
        (file-response (str resource-path filename)))
