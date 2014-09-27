@@ -19,15 +19,15 @@
 
 (defn ^:export test_svg [id]
   (let [el (d/by-id id)
-        svg (.getSVGDocument el)]
+        svg (d/svg-doc el)]
     (if svg
       (s/fix-viewBox! svg)
       (js/alert "Error while loading svg"))))
 
 
-(defn ^:export test_scaling [id]
+(defn ^:export test_scaling [id scale]
 	(let [el (d/by-id id)]
-		(d/scale-el! el 0.5)))
+		(d/scale-el! el scale)))
 
 
 ;;;;;;;;;;;
@@ -36,8 +36,8 @@
 
 (d/on-load (fn[]
 ; does not work in ie :)
-;               (enable-console-print!)
-;               (println "Junta Power!")
+               (enable-console-print!)
+               (println "Junta Power!")
              ))
 
 

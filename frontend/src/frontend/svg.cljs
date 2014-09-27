@@ -22,7 +22,8 @@
 
 
 (defn svg-root [svg]
-  (aget (.-children svg) 0))
+  (let [[root] (d/find-child svg "svg")]
+    root))
 
 
 (defn fix-viewBox! [svg]
@@ -31,7 +32,9 @@
      (if (empty-rect? viewBox)
        (let [h (len root "height")
              w (len root "width")]
-         (.setAttribute root "viewBox" (str "0 0 " w " " h))))))
+         ;;(.log js/console (str "0 0 " w " " h " "))
+
+         (.setAttribute root "viewBox" (str "0 0 " w " " h " "))))))
 
 
 

@@ -11,6 +11,7 @@ server configuration:
 
 backend:
 
+ ☐ returning svg content as xml
 
 frontend:
 
@@ -19,11 +20,16 @@ frontend:
   dom/svg utils 
   ☐ scaling
   ☐ fitting
+    ☐ no styles — use wd/hg
     ✔ fit width — via style @done (14-09-27 10:48)
-    ☐ fit height —  
+    ✔ fit window height —    @done (14-09-27 11:07)
      ? min width
+
+  ☐ best fit 
   ☐ centering svg — fit width + scale
   ☐ tiling
+
+  ☐ safari responsive svg http://benfrain.com/attempting-to-fix-responsive-svgs-in-desktop-safari/ 
   ✔ viewBox fix @done (14-09-27 10:47)
 
 animation engine:

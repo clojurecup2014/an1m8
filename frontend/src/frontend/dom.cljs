@@ -70,3 +70,17 @@
   ; multiple transforms?
   (set-style! el "transform" (str "scale(" scale "," scale ")" )))
 
+
+(defn find-child[el tag]
+  (let [matcher (tag-match tag)]
+    (filter tag-match (nodelist->coll (dom/getChildren el)))
+    )
+  )
+
+
+(defn svg-doc [obj]
+  (if-let [d (aget obj "contentDocument")]
+    d
+    (.getSVGDocument obj)
+    )
+  )

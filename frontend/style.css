@@ -10,16 +10,15 @@ button {
 }
 
 .svg-wrapper {
-  min-width: 33%;
-  width: 33%;
-
   border: 1px solid red;
   box-sizing: border-box;
   display: inline-block;
 }
 
+
 .svg-wrapper object {
   display: inline;
+  vertical-align: top;
 }
 
 .svg-wrapper .fill-w {
@@ -27,3 +26,27 @@ button {
 }
 
 
+.svg-wrapper .fill-h {
+  height: 100%;
+}
+
+
+.w_1_3 {
+  min-width: 33%;
+  width: 33%;
+}
+
+.h_1_3 {
+  height: 33%;
+  min-height: 33%;
+}
+
+.svg-wrapper #logo_1 {
+}
+
+#logo_1 {
+  opacity: 0.5;
+}
+
+#logo_1 svg {
+}

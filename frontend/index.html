@@ -14,23 +14,173 @@
     <object id="logo_1" data="1.svg" type="image/svg+xml"
             style=""></object> -->
 
-    <p>Test svg viewBox fix</p>
-        <div class="svg-wrapper">
-            <object id="logo_2" data="2.svg" type="image/svg+xml"
-                class="fill-w"
-				style="border: 1px solid blue;"
-                ></object>
+        <p>Test svg viewBox fix</p>
+
+        <h2>Best fit</h2>
+
+    <div class="safari">
+        <object id="logo_4" data="1.svg" type="image/svg+xml"
+                class=""></object>
         </div>
 
 
-        <div class="svg-wrapper">
+        <h2>Vertical</h2>
+
+        <div class="svg-wrapper h_1_3">
+            <object id="logo_3" data="2.svg" type="image/svg+xml"
+                    class="fill-h"
+                    style="border: 1px solid blue;"
+                    ></object>
+        </div>
+        <button onclick="frontend.core.test_scaling('logo_3', 0.33)">Test scaling</button>
+
+
+        <h2>Horizontal</h2>
+
+        <div class="svg-wrapper w_1_3">
+            <object id="logo_2" data="2.svg" type="image/svg+xml"
+                    class="fill-w"
+                    style="border: 1px solid blue;"
+                    ></object>
+        </div>
+
+        <div class="svg-wrapper w_1_3">
             <object id="logo_1" data="1.svg" type="image/svg+xml"
-                class="fill-w"></object>
+                    class="fill-w"></object>
         </div>
 
         <button onclick="frontend.core.test_svg('logo_1'); frontend.core.test_svg('logo_2');">Fix Viewport</button>
 
-        <button onclick="frontend.core.test_scaling('logo_2')">Test scaling</button>
+        <button onclick="frontend.core.test_scaling('logo_2', 0.5)">Test scaling</button>
 
+        <hr>
+
+        <div style="min-height: 1000px; backround-color: rgba(128,128,128,0.33);">foo</div>
+
+        <script>
+            /*
+Title: Vanilla JavaScript to fix responsive SVGs in some versions of Safari.
+What it does: Stops the problem I described here: http://stackoverflow.com/q/17158717/1147859 Reference URL of the issue: http://codepen.io/benfrain/full/fhyrD
+
+It will work on all SVGs referenced inside objects as long as given the class .emb:
+
+<object class="emb" data="img/cup.svg" type="image/svg+xml"></object>
+
+And also any inline SVGs.
+
+Necassary CSS (!important should be optional)
+
+svg {
+	height: 100%!important;
+	width: 100%!important;
+}
+
+Author: Ben Frain
+Date: 21.6.2013
+Version 0.1
+
+Pointers on the embedded SVGs from Erik Dahlström: http://xn--dahlstrm-t4a.net/svg/html/get-embedded-svg-document-script.html from this Stack Overflow question: http://stackoverflow.com/a/8134698/1147859
+*/
+
+// wait until all the resources are loaded
+/*window.addEventListener("load", function(){
+	findSVGs();
+	inlineSVGs();
+},false);
+window.addEventListener("resize", function(){
+	findSVGs();
+	inlineSVGs();
+},false) ;
+
+// fetches the document for the given embedding_element
+var getSubDocument = function(embedding_element) {
+	if (embedding_element.contentDocument)
+	{
+		return embedding_element.contentDocument;
+	}
+	else
+	{
+		var subdoc = null;
+		try {
+			subdoc = embedding_element.getSVGDocument();
+		} catch(e) {}
+		return subdoc;
+	}
+}; */
+
+var findSVGs = function() {
+	var elms = document.querySelectorAll("#logo_1");
+
+	// Find all emements with a class of .emb
+	// Make a loop for each
+	for (var i = 0; i < elms.length; i++) {
+		// Get the SVG whether content or iframe etc
+		subdoc = getSubDocument(elms[i]);
+
+		// Get the internal SVG document
+		SVGdoc = subdoc.documentElement;
+		// If it exists set the SVG to be width and height 100%;
+		if (subdoc) {
+			SVGdoc.setAttribute("height", "100%");
+			SVGdoc.setAttribute("min-height", "100%");
+			SVGdoc.setAttribute("width", "100%");
+			SVGdoc.setAttribute("min-width", "100%");
+        }
+	}
+};
+
+var inlineSVGs = function() {
+	// Find all inline elements
+	var inlines = document.getElementsByTagName("svg");
+	
+	// Make a loop for each
+	for (var i = 0; i < inlines.length; i++) {
+		// Get the computed width of the SVG as determined by UA
+		ComputedSVGWidthRaw = inlines[i].getBoundingClientRect().width.toFixed(0);
+		ComputedSVGWidth = inlines[i].getBoundingClientRect().width.toFixed(0) + 'px';
+
+		// If no height or width on SVG:
+		if (!inlines[i].hasAttribute("height") || !inlines[i].hasAttribute("width")) {
+			// If it has no width/height and ALSO DOES NOT have a viewBox:
+			if (!inlines[i].hasAttribute("viewBox")) {
+				// Then set the height to be the same as the ComputedSVGWidth
+				inlines[i].setAttribute("height", ComputedSVGWidth);
+				inlines[i].setAttribute("width", ComputedSVGWidth);
+			}
+			// If it has no width/height but DOES have a viewbox:
+			else {
+				// Split contents of the viewBox into an array
+				viewBox = inlines[i].getAttribute("viewBox").split(/[\s,]+/);
+				// With viewBox Width and Height are the last two values
+				viewBoxHeight = viewBox[viewBox.length-1];
+				viewBoxWidth = viewBox[viewBox.length-2];
+				HeightProportionFromViewBox = (viewBoxHeight / viewBoxWidth);
+				HeightfromViewBoxProportion = (ComputedSVGWidthRaw * HeightProportionFromViewBox).toFixed(0) + 'px';
+
+				// OK, let's set this Mofo:
+				inlines[i].setAttribute("width", ComputedSVGWidth);
+				inlines[i].setAttribute("height", HeightfromViewBoxProportion);
+			}
+		}
+		// At this point we have height and width
+		else {
+			// Get the height/width of the SVG sans units
+			OriginalSVGheight = parseInt(inlines[i].getAttribute("height"), 10);
+			OriginalSVGwidth = parseInt(inlines[i].getAttribute("width"), 10);
+
+			// Get the ratios of height and width
+			RatioOfHeightToWidth = (OriginalSVGheight / OriginalSVGwidth).toFixed(0);
+			RatioOfWidthToHeight = (OriginalSVGwidth / OriginalSVGheight);
+
+			// Define each width and height as value and add px to it - remove decimals to prevent rouding discrepancies
+			HeightAsProportion = (RatioOfHeightToWidth * ComputedSVGWidthRaw).toFixed(0) + 'px';
+			WidthAsProportion = (parseInt(HeightAsProportion, 10) * RatioOfWidthToHeight).toFixed(0) + 'px';
+
+			inlines[i].setAttribute("width", WidthAsProportion);
+			inlines[i].setAttribute("height", HeightAsProportion);
+		}
+	}
+};
+        </script>
     </body>
 </html>
