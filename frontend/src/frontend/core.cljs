@@ -34,8 +34,9 @@
 ; main
 
 (d/on-load (fn[]
-               (enable-console-print!) ; does not work in ie :)
-               (println "Junta Power!")
+; does not work in ie :)
+;               (enable-console-print!) 
+;               (println "Junta Power!")
              ))
 
 

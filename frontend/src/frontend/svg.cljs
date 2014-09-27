@@ -8,7 +8,6 @@
 ;
 ;
 
-
 (defn base-val[el prop]
   (.-baseVal (aget el prop)))
 
@@ -20,13 +19,6 @@
 (defn- empty-rect? [r]
   (or (nil? r)
        (= 0 (.-width r) (.-height r) (.-x r) (.-y r))))
-
-;(defn- svg-viewBox [el]
-;  (let [vb (.-viewBox el)
-;        v (.-baseVal el)]
-    ; todo
-;    v
-;    ))
 
 
 (defn svg-root [svg]
