@@ -4,7 +4,9 @@
                        :include-macros true :refer [defroute]]
                       [ajax.core :refer [POST]]))
 
-(js/alert "Foo")
+
+(comment
+;(js/alert "Foo")
 
 (def state (atom {:doc {} :saved? false}))
 
@@ -97,3 +99,4 @@
 ;;start the app
 (init!)
 
+)

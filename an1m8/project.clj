@@ -1,30 +1,33 @@
 (defproject an1m8 "0.1.0-SNAPSHOT"
   :description "AN1M8 is an tool for creating svg animations"
+
   :ring {:handler an1m8.handler/app,
          :init    an1m8.handler/init,
          :destroy an1m8.handler/destroy}
-  :cljsbuild {:builds
-              [{:source-paths ["src-cljs"],
-                :id "dev",
-                :compiler
-                {:output-dir "resources/public/js/",
-                 :optimizations :none,
-                 :output-to "resources/public/js/app.js",
-                 :source-map true,
-                 :pretty-print true}}
-               {:source-paths ["src-cljs"],
-                :id "release",
-                :compiler
-                {:closure-warnings {:non-standard-jsdoc :off},
-                 :optimizations :advanced,
-                 :output-to "resources/public/js/app.js",
-                 :output-wrapper false,
-                 :pretty-print false}}]}
+
+  :cljsbuild {:builds [{:source-paths ["src-cljs"],
+                        :id "dev",
+                        :compiler {:output-dir "resources/public/js/",
+                                   :optimizations :none,
+                                   :output-to "resources/public/js/app.js",
+                                   :source-map true,
+                                   :pretty-print true}}
+                       {:source-paths ["src-cljs"],
+                        :id "release",
+                        :compiler {:closure-warnings {:non-standard-jsdoc :off},
+                                   :optimizations :advanced,
+                                   :output-to "resources/public/js/app.js",
+                                   :output-wrapper false,
+                                   :pretty-print false}}]}
   :plugins [[lein-ring "0.8.10"]
             [lein-environ "0.5.0"]
             [lein-ancient "0.5.5"]
             [lein-cljsbuild "1.0.3"]]
+
   :url "http://an1m8.clojurecup.com"
+
+  :repl-options {:init-ns an1m8.repl}
+
   :profiles {:uberjar {:aot :all},
              :production {:ring {:open-browser? false, :stacktraces? false, :auto-reload? false}},
              :dev {:dependencies
@@ -69,7 +72,4 @@
                  [ring-server "0.3.1"]
                  [im.chit/cronj "1.4.2"]]
 
-
-
-  :repl-options {:init-ns an1m8.repl}
   :min-lein-version "2.5.0")
