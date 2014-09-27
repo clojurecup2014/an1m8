@@ -1,13 +1,11 @@
 (ns an1m8.routes.auth
   (:use compojure.core)
   (:require [an1m8.layout :as layout]
-            [noir.io :as io]
             [noir.session :as session]
             [noir.response :as resp]
             [noir.util.middleware :refer [app-handler]]
             [noir.validation :as vali]
             [noir.util.crypt :as crypt]
-            [ring.util.response :refer [file-response]]
             [an1m8.db.core :as db])
   (:import javax.xml.bind.DatatypeConverter))
 
@@ -72,22 +70,7 @@
   (session/clear!)
   (resp/redirect "/"))
 
-(def resource-path "/tmp/")
-
 (defroutes auth-routes
-
-  (GET "/upload" []
-       (layout/render "upload.html"))
-
-  (POST "/upload" [file]
-        ;; file with same name will be overwrited, so in production mode , gen a
-        ;; random string as filename
-       (io/upload-file resource-path file)
-       (resp/redirect
-         (str "/files/" (:filename file))))
-
-  (GET "/files/:filename" [filename]
-       (file-response (str resource-path filename)))
 
   (GET "/register" []
        (register))

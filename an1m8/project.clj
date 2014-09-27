@@ -52,7 +52,11 @@
   :jvm-opts
   ["-server"]
   :dependencies
-  [[markdown-clj "0.9.53"]
+   [[markdown-clj "0.9.47"]
+   [environ "0.5.0"]
+   [im.chit/cronj "1.0.1"]
+   [noir-exception "0.2.2"]
+   [markdown-clj "0.9.53"]
    [lib-noir "0.8.9"]
    [log4j
     "1.2.17"

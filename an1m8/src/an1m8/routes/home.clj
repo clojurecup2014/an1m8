@@ -5,7 +5,7 @@
                       [noir.response :refer [edn]]
                       [clojure.pprint :refer [pprint]]
                       [noir.io :as io]
-                      [noir.response :as response]
+                      [noir.response :as resp]
                       [noir.util.middleware :refer [app-handler]]
                       [ring.util.response :refer [file-response]]))
 
@@ -17,7 +17,24 @@
       (pprint doc)
       {:status "ok"})
 
+(def resource-path "/tmp/")
+
 (defroutes home-routes
+
   (GET "/" [] (home-page))
+
+  (GET "/upload" []
+       (layout/render "upload.html"))
+
+  (POST "/upload" [file]
+        ;; file with same name will be overwrited, so in production mode , gen a
+        ;; random string as filename
+       (io/upload-file resource-path file)
+       (resp/redirect
+         (str "/files/" (:filename file))))
+
+  (GET "/files/:filename" [filename]
+       (file-response (str resource-path filename)))
+
   (POST "/save" {:keys [body-params]}
     (edn (save-document body-params))))
