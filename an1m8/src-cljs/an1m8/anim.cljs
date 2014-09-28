@@ -100,11 +100,10 @@
               }
          } cfg
 
-        t (timing-f timing)
         anim-f #(do (println "put: " %) (nth [:a :b :c :d :e :nil] %)  )
         consume-f (partial println "take: ")
         ]
-    {:timing-f t
+    {:timing-f (timing-f timing)
      :frame-f (keyframe-f total anim-f)
      :consume-f consume-f
      }))
@@ -188,59 +187,19 @@
 
 
 (defn animation[svg selector]
-  (let [c (chan 100)             ; the channel for animation
-        ;fills   (get-layer svg "[fill]")
-        fills   (get-layer svg selector)
+  (let [N 100
 
-        strokes (get-layer svg "[fill]")
-        from [0 0 0]
-        to [255 0 0]
-        frames 100
-        wait-interval (nth-val 0 2500 frames)
-        color-f (partial (color-animation-fn from to) frames)]
+        fills (get-layer svg selector)
+        color-morph-f (partial (color-animation-fn [0 0 0] [255 0 0]) N)
 
-    ; ? how timing will work if the buffer of the channel will be overflown - use interval?
-    (let [c1 (chan)]                ; internal channel for
-      ; send first msg to fade out
-      (go (>! c1 [:dec 0]))
-
-      ; loop forever
-      (go
-       (while true
-         (<! (timeout wait-interval)) ; wait
-
-         (let [[op i] (<! c1)]        ; get new color change
-
-           (>! c {:fill (color-f i)}) ; send message to animation channel
-
-           (go (>! c1                 ; send a new color change
-                   (cond
-                    (and (= 0 i) (= :dec op)) [:asc i]
-                    (= :dec op)               [:dec (dec i)]
-                    (and (= :asc op) (= frames (inc i))) [:dec i]
-                    (= :asc op)                          [:asc (inc i)])))))))
-
-
-
-    (go
-     (while true
-       (let [{fill :fill
-              stroke :stroke} (<! c)]
-
-         ;(println [fill stroke])
-
-         (if fill
-           (doseq [f fills]
-             (dom/set-style! f "fill" (colors/rgb->s fill))
-             ))
-
-         (if stroke
-           (doseq [s strokes]
-             (dom/set-style! s "stroke" (colors/rgb->s stroke))
-             )))))
-
-    )
-  )
+        t (timing-f {:total N :duration 10})
+        f (keyframe-f N color-morph-f)
+        c (fn[fill]
+              (doseq [f fills]
+                (dom/set-style! f "fill" (colors/rgb->s fill)))
+            )
+        ]
+    (an1m t f c)))
 
 ; start
 
