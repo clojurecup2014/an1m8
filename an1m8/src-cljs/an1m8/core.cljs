@@ -10,6 +10,41 @@
 ;
 ;
 
+(defn run [handler]
+  (d/on-load handler))
+
+
+(defn- hide-loader[]
+  (d/set-style! (d/by-id "loader") "display" "none"))
+
+(defn- show-viewport [id]
+  (d/set-style! (d/by-id "viewport") "display" "block"))
+
+
+(defn- prepare-svg[id handler]
+  (let [logo (d/by-id id)]
+    (.addEventListener logo
+                       "load"
+                       (fn []
+                         (s/fix-viewBox! (d/svg-doc logo))
+                         (d/scale-el! logo 0.7)
+
+                         (handler)
+                         )
+                       false)))
+
+
+(defn ^:export app[]
+
+  (enable-console-print!) ; does not work in ie :)
+
+
+  (hide-loader)
+  (prepare-svg "logo-solid-1"
+               (fn[]
+                 (.log js/console "Foo!")))
+  (show-viewport "intro-view"))
+
 
 ;;;;;;;;;;
 ;
@@ -34,7 +69,7 @@
 ;
 ; main
 
-(d/on-load (fn[]
+#_(d/on-load (fn[]
 
              (enable-console-print!) ; does not work in ie :)
              (println "Junta Power!")
@@ -42,7 +77,7 @@
              (let [logos (map d/by-id ["logo" "logo-light" "logo-3d" "logo-solid-1"])]
                 (doseq [logo logos]
 
-                    ;(js/fix_ie_svg logo)
+                    (js/fix_ie_svg logo)
                     (s/fix-viewBox! (d/svg-doc logo))
                     (d/scale-el! logo 0.7)
 

@@ -1,196 +1,33 @@
 <html>
-	<head>
+    <head>
         <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
         <link rel="stylesheet" type="text/css" href="/css/style.css">
-
-        <title>AN1M8 :: </title>
-
-      {% script "/js/goog/base.js" %}
-      {% script "/js/app.js" %}
-      <script type="text/javascript">goog.require("an1m8.core");</script>
-
-      <!--[if IE]>
-<script type="text/javascript" src='/css/ie.js'></script>
-      <![endif]-->
-
     </head>
     <body>
-        <div class="svg-wrapper fill-w">
-            <object id="logo-solid-1" class="fill-w" data="/svg/logo_solid_1.svg" type="image/svg+xml" ></object>
-        </div><hr>
 
-        <div class="svg-wrapper fill-w">
-            <object id="logo" class="fill-w" data="/svg/logo.svg" type="image/svg+xml" ></object>
-        </div><hr>
+        {% include "templates/loader.html" %}
 
-        <div class="svg-wrapper fill-w">
-            <object id="logo-light" class="fill-w" data="/svg/logo_light.svg" type="image/svg+xml" ></object>
-        </div><hr>
+        <div id="viewport" style="display: none;">
+            <div id="intro-view" >
+                <div class="svg-wrapper fill-w">
+                    <object id="logo-solid-1" class="fill-w" data="/svg/logo_solid_1.svg" type="image/svg+xml" ></object>
+                </div><hr>
+            </div>
 
-        <div class="svg-wrapper fill-w">
-            <object id="logo-3d" class="fill-w" data="/svg/logo_3d.svg" type="image/svg+xml" ></object>
-        </div><hr>
-
-        <h1>AN1M8</h1>
-
-        {{svg|safe}}
-
-
-        <p><a class="btn btn-primary btn-lg" href="/upload">go to upload a image</a></p>
-
-        <hr>
-
-
-<!--    <p>Test loading svg via url</p>
-    <object id="logo_1" data="1.svg" type="image/svg+xml"
-            style=""></object> -->
-
-        <p>Test svg viewBox fix</p>
-
-        <h2>Best fit</h2>
-
-    <div class="safari">
-        <object id="logo_4" data="/svg/1.svg" type="image/svg+xml"
-                class=""></object>
         </div>
 
+        <!--[if IE]><script type="text/javascript" src='/css/ie.js'></script><![endif]-->
 
-        <h2>Vertical</h2>
+        {% script "/js/goog/base.js" %}
+        {% script "/js/app.js" %}
+        <script type="text/javascript">goog.require("an1m8.core");</script>
 
-        <div class="svg-wrapper h_1_3">
-            <object id="logo_3" data="/svg/2.svg" type="image/svg+xml"
-                    class="fill-h"
-                    style="border: 1px solid blue;"
-                    ></object>
-        </div>
-        <button onclick="an1m8.core.test_scaling('logo_3', 0.33)">Test scaling</button>
+        <script type="text/javascript">
+            var context = "{{servlet-context}}";
 
-
-        <h2>Horizontal</h2>
-
-        <div class="svg-wrapper w_1_3">
-            <object id="logo_2" data="/svg/2.svg" type="image/svg+xml"
-                    class="fill-w"
-                    style="border: 1px solid blue;"
-                    ></object>
-        </div>
-
-        <div class="svg-wrapper w_1_3">
-            <object id="logo_1" data="/svg/1.svg" type="image/svg+xml"
-                    class="fill-w"></object>
-        </div>
-
-        <button onclick="an1m8.core.test_svg('logo_1'); an1m8.core.test_svg('logo_2');">Fix Viewport</button>
-
-        <button onclick="an1m8.core.test_scaling('logo_2', 0.5)">Test scaling</button>
-
-        <hr>
-
-        <div style="min-height: 1000px; backround-color: rgba(128,128,128,0.33);">foo</div>
-
-<hr>
-
-
-    {% block content %}
-    {% endblock %}
-
-
-    <script type="text/javascript">
-        var context = "{{servlet-context}}";
-    </script>
-
-
-
-
-   <h1 style="padding-top: 7000px;">Foo</h1>
-        {% if user-id %}
-        <a href="{{servlet-context}}/profile">Profile</a>
-        <a href="{{servlet-context}}/logout">Sign Out</a>
-
-        <h2>User details for {{user.id}}</h2>
-        <form action="{{servlet-context}}/update-profile" method="POST">
-            <div class="form-group col-lg-3">
-                <label for="id">first name</label>
-                <p>
-                    <input class="form-control" id="first-name" name="first-name" tabindex="1" type="text" value={{user.first_name}}></input>
-        </p>
-        <label for="id">last name</label>
-        <p>
-            <input class="form-control" id="last-name" name="last-name" tabindex="1" type="text" value={{user.last_name}}></input>
-        </p>
-        <label for="id">email</label>
-        <p>
-            <input class="form-control" id="email" name="email" tabindex="1" type="text" value={{user.email}}></input>
-        </p>
-        <input class="btn" tabindex="4" type="submit" value="update profile">
-        </div>
-        </form>
-
-          {% else %}
-
-        <form id="login-form" class="navbar-form">
-            <input class="span2"
-                   id="id"
-                   name="id"
-                   placeholder="user id"
-                   style="margin-right: 5px"
-                   type="text"/>
-            <input class="span2"
-                   id="pass"
-                   name="pass"
-                   placeholder="password"
-                   style="margin-right: 5px"
-                   type="password"/>
-            <input class="btn" type="submit" onClick="login" value="Login"/>
-            </form>
-
-         <!-- $( "#login-form").submit(function(event) {
-            $.ajax
-            ({
-                type: "GET",
-                url: "{{servlet-context}}/login",
-                headers: {
-                    "Authorization": "Basic " + btoa($("input#id").val() + ":" + $("input#pass").val())
-                },
-                success: function () {
-                    document.location.href = "{{servlet-context}}/";
-                }
-            });
-            event.preventDefault();
-        });
-
-
-<form action="{{servlet-context}}/register" method="POST">
-  <div class="form-group col-lg-3">
-    <label for="id">user id</label>
-    {% if id-error %}
-      <div class="alert alert-danger">{{id-error}}</div>
-    {% endif %}
-    <p>
-      <input class="form-control" id="id" name="id" tabindex="1" type="text" value={{id}}></input>
-    </p>
-    <label for="pass">password</label>
-    {% if pass-error %}
-      <div class="alert alert-danger">{{pass-error}}</div>
-    {% endif %}
-    <p>
-      <input class="form-control" id="pass" name="pass" tabindex="2" type="password"></input>
-    </p>
-    <label for="pass1">retype password</label>
-    {% if pass1-error %}
-      <div class="alert alert-danger">{{pass1-error}}</div>
-    {% endif %}
-    <p>
-      <input class="form-control" id="pass1" name="pass1" tabindex="3" type="password"></input>
-    </p>
-    <input class="btn" tabindex="4" type="submit" value="create account">
-  </div>
-</form>
--->
-
-          {% endif %}
-        <hr>
-
+            // app initialization
+            // todo - add data here
+            an1m8.core.run(an1m8.core.app);
+        </script>
     </body>
 </html>

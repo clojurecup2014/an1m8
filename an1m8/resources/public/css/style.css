@@ -42,3 +42,30 @@ button {
 }
 
 
+
+
+.table {
+	display: table;
+	width: 100%;
+}
+
+.table-cell {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.center {
+	text-align: center;
+}
+
+
+.min-h100{
+  min-height:100%
+}
+
+
+
+
+#loader {
+  border-radius: 1em;
+}
