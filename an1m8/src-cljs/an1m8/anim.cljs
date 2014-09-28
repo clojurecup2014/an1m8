@@ -33,11 +33,12 @@
 ; time function
 ;
 (defn timing-f[params]
+  ; use other param than duration
   (let [{id :id
          duration :duration
          :or {id :const duration 1000}} params]
     (case id
-      :ln #(do
+       :ln #(do
               Math/log ( + % 333)
             )
        :rand #(do
@@ -101,18 +102,8 @@
 
 
 ;
-; svg stuff - tmp
-;
-
-(defn- get-layer [svg selector]
-  (dom/nodelist->coll
-   (.querySelectorAll svg selector)))
-
-;
 ; animation func
 ;
-
-
 
 (defn animation-f [cfg]
   (let [{total :total
@@ -140,12 +131,13 @@
            :or {value (colors/random-color)}} data]
 
 
-      (println "take: " (keys data))
+      ;(println "take: " (keys data))
 
       (doseq [el els]
         (case prop
          :fill (dom/set-style! el "fill" (colors/rgb->s value))
          :stroke (dom/set-style! el "stroke" (colors/rgb->s (colors/random-color)))
+         :scale (dom/scale-el! el (Math/random))
          (do
            ;(println "default animation" value)
            (dom/set-style! el "fill" (colors/rgb->s value))
@@ -156,6 +148,8 @@
     )
   )
 )
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;
 ;
 ; animation config
@@ -253,7 +247,7 @@
 (defn animation[svg selector]
   (let [N 100
 
-        fills (get-layer svg selector)
+        fills (dom/get-layer svg selector)
 
         color-morph-f (partial (color-animation-fn [0 0 0] [255 175 100]) N)
 
@@ -285,19 +279,18 @@
 ;
 ;
 ;
-; DEV ANIM
+; DEV ANIM - animates svg via config from sever
 ;
 ;
 
 (defn dev-animation[svg global-cfg]
 
-   (an1m8-many (merge {:svg svg} global-cfg)
-               [{:els (dom/get-layer svg "#A path")}
-                {:els (dom/get-layer svg "#N path")}
-                {:els (dom/get-layer svg "[id='1'] path")}
-                {:els (dom/get-layer svg "#M path")}
-                {:els (dom/get-layer svg "[id='8'] path")}
-                ])
+  (an1m8-many (merge {:svg svg} global-cfg)
+              (reduce (fn [a [k v]]
+                        (conj a
+                              (merge v
+                                     {:els (dom/get-layer svg k)})))
+                      [] (:layers (:cfg global-cfg))))
 
 
    ;(let [full-cfg (merge {:svg svg} config)

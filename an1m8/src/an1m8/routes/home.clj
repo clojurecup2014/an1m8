@@ -72,9 +72,33 @@
   (GET "/gallery/" []
        (edn [;["/svg/logo.svg" {}]
              ;["/svg/logo_3d.svg" {}]
-             ["/svg/logo_light.svg" {:duration 1000
-                                     :total 100
-
+             ["/svg/logo_light.svg" {:total 100
+                                     ;:prop :stroke
+                                     :layers {"#A path" {:total 10
+                                                         :timing-f {:id :const
+                                                                    :duration 100
+                                                                  }
+                                                         :prop :stroke
+                                                         }
+                                              "#N path" {:total 100
+                                                         :prop :stroke
+                                                         {:id :const
+                                                                    :duration 50
+                                                                  }
+                                                         }
+                                              "[id='1'] path" {:total 75
+                                                               :prop :stroke
+                                                               :timing-f {:id :sin
+                                                                    :duration 100
+                                                                  }
+                                                               }
+                                              "#M path" {:prop :stroke}
+                                              "[id='8'] path" {:total 100
+                                                               :prop :stroke
+                                                               :timing-f {:id :ln
+                                                                    :duration 100
+                                                                  }
+                                                               }}
                                      }]
              ;["/svg/1.svg" {}]
              ;["/svg/2.svg" {}]
