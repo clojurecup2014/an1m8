@@ -38,17 +38,18 @@
          :or {id :const duration 1000}} params]
     (case id
       :ln #(do
-               Math/log ( + % 333)
-
-             )
+              Math/log ( + % 333)
+            )
        :rand #(do
                  (* (rand-int %) 10)
-                )
+               )
 
        :sin #(do
                  (+ 200 (Math/sin (+ % 100)))
+              )
 
-               )
+        :list #(nth (:duration params) (rem % (count (:duration params))))
+
     ; same intervals of time between keyframe
       :const (constantly duration)
       (constantly duration)
@@ -203,14 +204,14 @@
 
         fills (get-layer svg selector)
 
-        ;color-morph-f (partial (color-animation-fn [0 0 0] [255 0 0]) N)
-        color-morph-f (fn [x]
+        color-morph-f (partial (color-animation-fn [0 0 0] [255 100  100]) N)
+        ;color-morph-f (fn [x]
+        ;
+        ;                (colors/random-color)
+        ;                )
 
-                        (colors/random-color)
-                        )
 
-
-        t (timing-f {:total N :duration 500 :id :sin})
+        t (timing-f {:total N :duration 500})
         f (keyframe-f N color-morph-f)
         c (fn[fill]
               (doseq [f fills]
