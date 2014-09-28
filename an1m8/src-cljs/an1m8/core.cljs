@@ -66,7 +66,7 @@
         svg (d/svg-doc el)]
 
     (s/fix-viewBox! svg)
-    (d/scale-el! el 0.75)
+    (d/scale-el! el 1)
 
     (d/on-click! (str "run-svg-" i)
        #(this-as b (run-animation (.getAttribute b "data-source"))))))
@@ -105,7 +105,9 @@
               :error-handler error-handler
               :response-format (edn-response-format)
               :request-format (edn-request-format)
-              :keywords? true}))
+              :keywords? true
+              :headers {"Cache-Control" "no-cache"}
+                     }))
 
 
 (defn ^:export init_editor_page[]
