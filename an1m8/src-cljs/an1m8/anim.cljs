@@ -130,7 +130,7 @@
 
 (defn consume-f
   [{total :total
-    svg :svg} cfg]
+    svg :svg}]
 
   (fn[data]
     (let [{els :els
@@ -212,6 +212,11 @@
    (let [{t :timing-f f :frame-f c :consume-f} (animation-config cfg)]
      (an1m t f c)))
 
+(defn an1m8-many [global-cfg layers]
+
+  )
+
+
 
 
 ;;;;;;;;;;;;;;;
@@ -275,7 +280,7 @@
 
 
 (defn dev-animation[svg config]
-   (let [full-cfg (merge {:svg svg} cfg )
+   (let [full-cfg (merge {:svg svg} config)
          {t :timing-f f :frame-f c :consume-f}
          (animation-config full-cfg)]
      (an1m t f c))
