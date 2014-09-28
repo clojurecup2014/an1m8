@@ -80,6 +80,8 @@
 
 (defn run-animation [svg-id]
   (let [status (get @animations svg-id)]
+    (println "ANIMATE " svg-id status)
+
     (swap! animations merge
            {svg-id
             (if-not (:running status)
@@ -122,13 +124,7 @@
 
                (swap! animations assoc id {:cfg cfg})
                ))
-
            )
-
-    (when (= 1 (count response))
-      (println "animating with cfg" (second (first response)))
-      (a/dev-animation (d/svg-doc (d/by-id "svg-0")) (second (first response))))
-
     ))
 
 

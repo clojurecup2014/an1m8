@@ -125,6 +125,7 @@
               :i %
               :els els
               :prop prop
+
               } ]
        (println "put: " (keys r))
        (merge r )
@@ -250,7 +251,7 @@
 
 
 
-
+;; deprecated
 (defn animation[svg selector]
   (let [N 100
 
