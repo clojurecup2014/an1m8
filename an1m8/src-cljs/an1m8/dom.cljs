@@ -81,6 +81,11 @@
   )
 
 
+(defn svg-by-id [id]
+  (if-let [el (by-id id)]
+    (svg-doc el)))
+
+
 (defn svg-doc [obj]
   (if-let [d (aget obj "contentDocument")]
     d

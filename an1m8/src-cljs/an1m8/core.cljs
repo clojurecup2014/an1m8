@@ -131,14 +131,14 @@
 
 
 (defn- app-loaded []
-  (let [c (a/animation (d/svg-doc (d/by-id "logo-solid-1")) "path")]
-                  (d/on-click! "logo-wrapper" #(app/show-viewport "intro-view" init_landing_page))
+  (let [c (a/animation (d/svg-by-id "logo-solid-1") "path")]
+    (d/on-click! "logo-wrapper" #(app/show-viewport "intro-view" init_landing_page))
 
-                  (if (= (str js/initial_view js/initial_action) "")
-                    (app/show-viewport "intro-view" init_landing_page)
-                    (app/show-viewport js/initial_view (aget js/an1m8.core js/initial_action)))
+    (if (= (str js/initial_view js/initial_action) "")
+      (app/show-viewport "intro-view" init_landing_page)
+      (app/show-viewport js/initial_view (aget js/an1m8.core js/initial_action)))
 
-                  (app/hide-loader)))
+    (app/hide-loader)))
 ;
 ;
 ; main
@@ -147,6 +147,7 @@
 (defn ^:export app_fn[]
   (enable-console-print!) ; does not work in ie :)
   (.log js/console "Junta Power!")
+
   (app/show-loader) ; ff fix
   (wait-for-svg "logo-solid-1" app-loaded))
 
