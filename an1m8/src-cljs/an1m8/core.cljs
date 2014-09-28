@@ -54,13 +54,19 @@
                   :duration 300}
        :els (d/get-layer svg "#N path")
       }
-      {:els (d/get-layer svg "[id='1'] path")}
+      {:els (d/get-layer svg "[id='1'] path")
+       :timing-f {:id :rand}
+
+       }
       {:els (d/get-layer svg "#M path")
        :total 50
        :f (partial (a/color-animation-fn (colors/random-color) (colors/random-color)) 50)
 
        }
-      {:els (d/get-layer svg "[id='8'] path")}
+      {:els (d/get-layer svg "[id='8'] path")
+       :timing-f {:id :list
+                  :duration [10 500 250 230 200 170 100 50 135 10]}
+       }
       ])))
 
 

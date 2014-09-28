@@ -41,7 +41,7 @@
               Math/log ( + % 333)
             )
        :rand #(do
-                 (* (rand-int %) 10)
+                 (* (rand-int %) 2000) ; todo
                )
 
        :sin #(do
