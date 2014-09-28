@@ -117,24 +117,34 @@
 (defn animation-f [cfg]
   (let [{total :total
          svg :svg
-
          :or { total 100 }} cfg]
 
-    #(do (println "put: " %)
-       ;(nth [:a :b :c :d :e :nil] %)
-        {
-        :els (get-layer svg "#A path")
-        :total total
-        :i %
-        }
-       )
+    #(let [r {:els (get-layer svg "#A path")
+              :total total
+              :i %
+              } ]
+       (println "put: " (keys r))
+       r ;(nth [:a :b :c :d :e :nil] %)
+       )))
+
+
+(defn consume-f
+  [{total :total
+    svg :svg} cfg]
+
+  (fn[data]
+    (let [{els :els
+           prop :prop
+           value :value} data]
+      (println "take: " (keys data))
+
+      (doseq [el els]
+         (dom/set-style! el "fill" (colors/rgb->s (colors/random-color))))
+
+      )
+
+
     )
-
-  )
-
-
-(defn consume-f [cfg]
-  (partial println "take: ")
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;
