@@ -35,15 +35,13 @@
 
 
 (defn ^:export app[]
-
   (enable-console-print!) ; does not work in ie :)
 
-
-  (hide-loader)
+  (show-viewport "intro-view")
   (prepare-svg "logo-solid-1"
                (fn[]
-                 (.log js/console "Foo!")))
-  (show-viewport "intro-view"))
+                 (.log js/console "Junta Power!")
+                 (hide-loader))))
 
 
 ;;;;;;;;;;
