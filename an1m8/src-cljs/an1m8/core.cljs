@@ -73,12 +73,27 @@
 ;; underscores to for visibiliness from js
 
 
-(defn img-handler [response]
-  (doseq [image (:images response)]
-        (js/alert image)
+(defn gallery-handler [response]
+  (let [container (d/by-id "anim-list")]
+    (doall (for [i (range (count response))]
+             (let [[svg-path cfg] (nth response i)
+                   el (.createElement js/document "div")
+                   id (str "svg-" i)
+                   ]
+               (d/set-html! el
+                            (str "<div id='svg-wrapper-" i "' class='bordered w_2_3' style='display: inline-block;' >
+                                 <object id='" id "'  class='fill-w' data='" svg-path "' type='image/svg+xml'></object></div>
+                                 <button>Run</button>")
+                            )
+               (.appendChild container el)
+               (prepare-svg id
+                            (fn[]
+                              (let [el (d/by-id (str "svg-" i))
+                                    svg (d/svg-doc el)
+                                    ]
 
-    )
-  )
+                              (s/fix-viewBox! svg)
+                              (d/scale-el! el 0.75)))))))))
 
 
 (defn error-handler [{:keys [status status-text]}]
@@ -87,8 +102,8 @@
 
 (defn ^:export init_gallery_page[]
    (small-logo)
-   (GET "/files/" {
-              :handler img-handler
+   (GET "/gallery/" {
+              :handler gallery-handler
               :error-handler error-handler
               :response-format (edn-response-format)
               :request-format (edn-request-format)

@@ -66,6 +66,12 @@ button {
   width: 33%;
 }
 
+.w_2_3 {
+  min-width: 67%;
+  width: 67%;
+}
+
+
 .w_1_5 {
   height: 20%;
   min-height: 20%;
@@ -106,8 +112,8 @@ button {
   padding: 1em;
 }
 
-.bottom-hr {
-  border-bottom: 1px solid rgba(128,128,128,0.5);
+.bordered {
+  border: 1px solid rgba(128,128,128,0.5);
 }
 
 .button {
