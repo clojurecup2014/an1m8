@@ -45,6 +45,7 @@
               (do
                 (s/fix-viewBox! svg)
                 (d/scale-el! logo 0.7)
+
                 (handler)
                 )))]
     (if (empty? (d/nodelist->coll (.querySelectorAll (d/svg-doc logo) "svg")))
@@ -53,14 +54,29 @@
     )))
 
 
-;; underscores to for visibiliness from js
+(defn- small-logo[]
+  (let [logo-wrapper (d/by-id "logo-wrapper")]
+    (d/remove-class! logo-wrapper "fill-w")
+    (d/add-class! logo-wrapper "w_1_5")))
 
+
+(defn- big-logo[]
+  (let [logo-wrapper (d/by-id "logo-wrapper")]
+    (d/add-class! logo-wrapper "fill-w")
+    (d/remove-class! logo-wrapper "w_1_3")))
+
+
+;; underscores to for visibiliness from js
 
 (defn img-handler [response]
   (doseq [image (:images response)]
         (js/alert image)
 
     )
+
+(defn ^:export init_gallery_page[]
+  (small-logo)
+  (hide-loader)
   )
 
 
@@ -79,37 +95,23 @@
 (hide-loader)
 )
 
-(defn ^:export init_editor_page[]
-  (hide-loader))
-
 
 (defn ^:export init_landing_page []
-  (prepare-svg "logo-solid-1"
-               (fn[]
-                 (.log js/console "Junta Power!")
+  (big-logo)
 
-                 (let [c (a/animation (d/svg-doc (d/by-id "logo-solid-1")) "path")]
-                   ; hard coded a/animation, for now
-                   (d/on-click! "stop" (fn[e]
-                                         (a/stop-animation c)))
-                   )
+  (.log js/console "Junta Power!")
 
+  (a/an1m8 {:timing-f {:duration 500}})
+  (d/on-click! "gallery-btn"
+               (fn[e]
+                 (show-viewport "gallery-view" init_gallery_page)
+                 false))
 
+  (d/on-click! "editor-btn"
+               (fn[e]
+                 (show-viewport "editor-view" init_editor_page)
+                 false)))
 
-                 (a/an1m8 {:timing-f {:duration 500}})
-
-                 (d/on-click! "gallery-btn"
-                              (fn[e]
-                                (show-viewport "gallery-view" init_gallery_page)
-                                false))
-
-                 (d/on-click! "editor-btn"
-                              (fn[e]
-                                (show-viewport "editor-view" init_editor_page)
-                                false))
-
-
-                 (hide-loader))))
 
 
 (defn ^:export app[]
@@ -117,10 +119,17 @@
 
   (show-loader) ; ff fix
 
+  (prepare-svg "logo-solid-1"
 
-  (if (= (str js/initial_view js/initial_action) "")
-    (show-viewport "intro-view" init_landing_page)
-    (show-viewport js/initial_view (aget js/an1m8.core js/initial_action)))
+               #(let [c (a/animation (d/svg-doc (d/by-id "logo-solid-1")) "path")]
+                  (d/on-click! "stop"
+                               (fn[e] (a/stop-animation c)))
+
+                  (if (= (str js/initial_view js/initial_action) "")
+                    (show-viewport "intro-view" init_landing_page)
+                    (show-viewport js/initial_view (aget js/an1m8.core js/initial_action)))
+                  (hide-loader)
+                  ))
 
   )
 

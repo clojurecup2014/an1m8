@@ -34,7 +34,6 @@ button {
 }
 
 .svg-wrapper {
-  border: 1px solid rgba(128, 128, 128, 0.33);
   box-sizing: border-box;
   display: inline-block;
 }
@@ -61,10 +60,17 @@ button {
   width: 33%;
 }
 
+.w_1_5 {
+  height: 20%;
+  min-height: 20%;
+}
+
+
 .h_1_3 {
   height: 33%;
   min-height: 33%;
 }
+
 
 
 .table {
