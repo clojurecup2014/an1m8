@@ -70,8 +70,7 @@
 
   ;; hardcoded animations
   (GET "/gallery/" []
-       (edn [;["/svg/logo.svg" {}]
-             ;["/svg/logo_3d.svg" {}]
+       (edn [
              ["/svg/logo_light.svg" {:total 100
                                      ;:prop :stroke
                                      :layers {"#A path" {:total 10
@@ -82,9 +81,8 @@
                                                          }
                                               "#N path" {:total 100
                                                          :prop :stroke
-                                                         {:id :const
-                                                                    :duration 50
-                                                                  }
+                                                         :timing-f {:id :const
+                                                                   :duration 50}
                                                          }
                                               "[id='1'] path" {:total 75
                                                                :prop :stroke
@@ -100,6 +98,23 @@
                                                                   }
                                                                }}
                                      }]
+             ["/svg/logo.svg" {:total 50
+                                  :layers {"path"
+                                           {:total 10
+                                            :prop :stroke
+                                            }}
+                                 }]
+
+             ["/svg/logo_3d.svg" {:total 50
+                                  :layers {"path"
+                                           {:total 10
+                                            :prop :scale
+                                            }}
+                                  }]
+
+
+
+
              ;["/svg/1.svg" {}]
              ;["/svg/2.svg" {}]
              ]))

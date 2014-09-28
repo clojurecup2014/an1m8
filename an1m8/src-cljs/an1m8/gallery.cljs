@@ -48,7 +48,7 @@
                (d/set-html! el
                             (str "<div id='svg-wrapper-" i "' class='bordered w_2_3' style='display: inline-block;' >
                                  <object id='" id "'  class='fill-w' data='" svg-path "' type='image/svg+xml'></object></div>
-                                 <button id='run-" id "' data-source='" id "'>Run</button>"))
+                                 <button id='run-" id "' data-source='" id "'>Run/Stop</button>"))
                (.appendChild container el)
                (s/wait-for-svg id (partial init-gallery-svg i el cfg))
 
