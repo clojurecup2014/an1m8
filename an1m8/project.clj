@@ -70,6 +70,7 @@
                  [selmer "0.7.1"]
                  [environ "1.0.0"]
                  [ring-server "0.3.1"]
-                 [im.chit/cronj "1.4.2"]]
+                 [im.chit/cronj "1.4.2"]
+                 [enlive "1.1.5"]]
 
   :min-lein-version "2.5.0")

@@ -1,10 +1,13 @@
 (ns an1m8.core
   "I do stuff"
-	(:require 
+	(:require
             [an1m8.dom :as d]
             [an1m8.anim :as a]
             [an1m8.svg :as s]
-            [ajax.core :refer [GET POST]]))
+            [ajax.core :refer [GET POST
+                               edn-response-format
+                               edn-request-format]])
+  )
 
 ;
 ;
@@ -53,20 +56,25 @@
 ;; underscores to for visibiliness from js
 
 
-(defn handler [response]
-  (.log js/console (str  response)))
+(defn img-handler [response]
+  (doseq [image (:images response)]
+        (js/alert image)
+
+    )
+  )
+
 
 (defn error-handler [{:keys [status status-text]}]
   (.log js/console (str "something bad happened: " status " " status-text)))
 
 (defn ^:export init_gallery_page[]
-   (let [images (GET "/files/" {
-              :handler handler
+   (GET "/files/" {
+              :handler img-handler
               :error-handler error-handler
-              :response-format :edn
-              :keywords? true})]
-     (loop [image images] (println image))) 
-    
+              :response-format (edn-response-format)
+              :request-format (edn-request-format)
+              :keywords? true})
+
 
 (hide-loader)
 )
