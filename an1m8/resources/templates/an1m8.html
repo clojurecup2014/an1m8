@@ -32,14 +32,14 @@
             </div>
 
             <div id="gallery-view" style="display: none;">
-                <div class="fixed-column">
-                    <!-- <h1>I am the galery</h1> -->
-                    <h1>Please, come back later</h1>
+                <div class="full-w center" style="margin: 1em;">
+                    <div id="anim-list"></div>
                 </div>
             </div>
 
+
             <div id="editor-view" style="display: none;">
-                <div class="fixed-column">
+                <div class="full-w">
                     <h1>Please, come back later</h1>
 
                     <!-- <h1>I am the editor</h1>
@@ -67,8 +67,8 @@
         <script type="text/javascript">
             var context = "{{servlet-context}}";
 
-            var initial_view = ""; //"gallery-view";
-            var initial_action = "";// "init_gallery_page";
+            var initial_view = "gallery-view"; // "";
+            var initial_action = "init_gallery_page"; // "";
 
             an1m8.core.run(an1m8.core.app);
         </script>

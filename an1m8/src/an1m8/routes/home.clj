@@ -40,11 +40,7 @@
 (defn debug-page []
   (layout/render "lt.html"))
 
-(defn save-document [doc]
-      ; (pprint doc)
-      {:status "ok"})
-
-(defn gallery-page []
+(defn list-all-svg []
     {:images
      (drop 1 (for [file (file-seq (clojure.java.io/file image-path))] (.getName file)))})
 
@@ -68,12 +64,18 @@
   (GET "/files/:filename" [filename]
        (xml (slurp (str image-path filename))))
 
-  
-(GET "/files/"[]
-     (edn (gallery-page))
-)
-  
 
-  (POST "/save" {:keys [body-params]}
-    (edn (save-document body-params)))
+  (GET "/files/" []
+       (edn (list-all-svg)))
+
+  ;; hardcoded animations
+  (GET "/gallery/" []
+       (edn [["/svg/logo.svg" {}]
+             ["/svg/logo_3d.svg" {}]
+             ["/svg/logo_light.svg" {}]
+             ["/svg/1.svg" {}]
+             ["/svg/2.svg" {}]
+             ]))
+
+
 )
