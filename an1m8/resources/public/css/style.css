@@ -153,3 +153,10 @@ button {
   height: 100%;
 }
 
+
+footer {
+  font-weight: 100;
+  font-size: 12pt;
+
+  color: #585858;
+}

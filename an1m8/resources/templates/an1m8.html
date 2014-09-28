@@ -39,9 +39,10 @@
 
 
             <div id="editor-view" style="display: none;">
-                <div class="full-w">
-                    <h1>Please, come back later</h1>
-
+                <div class="fixed-column">
+                    <h1>:-(</h1>
+                    <p>Unfortunately, we ran out of time. </p>
+                    <p>Please, come back later, or follow us on Github/Twitter to be informed about AN1M8's faith.</p>
                     <!-- <h1>I am the editor</h1>
 
                     <form action="/upload" enctype="multipart/form-data" method="POST">
@@ -53,6 +54,7 @@
 
             </div>
 
+            <footer class="center">&copy; 2014, by <a href="https://twitter.com/__ndrw">@ndrew</a> & <a href="https://twitter.com/gorysko">@gorysko</a> for <a href="https://clojurecup.com">ClojureCup</a>.</footer>
         </div>
 
         <!--[if IE]><script type="text/javascript" src='/css/ie.js'></script><![endif]-->
@@ -67,8 +69,8 @@
         <script type="text/javascript">
             var context = "{{servlet-context}}";
 
-            var initial_view = "gallery-view"; // "";
-            var initial_action = "init_gallery_page"; // "";
+            var initial_view = ""; // "gallery-view";
+            var initial_action = ""; // "init_gallery_page";
 
             an1m8.core.run(an1m8.core.app);
         </script>

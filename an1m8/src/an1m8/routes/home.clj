@@ -73,8 +73,8 @@
        (edn [["/svg/logo.svg" {}]
              ["/svg/logo_3d.svg" {}]
              ["/svg/logo_light.svg" {}]
-             ["/svg/1.svg" {}]
-             ["/svg/2.svg" {}]
+             ;["/svg/1.svg" {}]
+             ;["/svg/2.svg" {}]
              ]))
 
 
