@@ -106,10 +106,79 @@
                                  }]
 
              ["/svg/logo_3d.svg" {:total 50
-                                  :layers {"path"
-                                           {:total 10
-                                            :prop :scale
-                                            }}
+                                  :layers {"#A_1 path" {:total 10
+                    :timing-f {:id :const
+                               :duration 100
+                               }
+                    :prop :stroke
+                    }
+         "#N_1 path" {:total 100
+                    :prop :stroke
+                    :timing-f {:id :const
+                               :duration 50}
+                    }
+         "[id='1_1'] path" {:total 75
+                          :prop :stroke
+                          :timing-f {:id :sin
+                                     :duration 100
+                                     }
+                          }
+         "#M_1 path" {:prop :stroke}
+         "[id='8_1'] path" {:total 100
+                          :prop :stroke
+                          :timing-f {:id :ln
+                                     :duration 100
+                                     }
+                          }
+         "#A_2 path" {:total 10
+                    :timing-f {:id :const
+                               :duration 100
+                               }
+                    :prop :stroke
+                    }
+         "#N_2 path" {:total 100
+                    :prop :stroke
+                    :timing-f {:id :const
+                               :duration 50}
+                    }
+         "[id='1_2'] path" {:total 75
+                          :prop :stroke
+                          :timing-f {:id :sin
+                                     :duration 100
+                                     }
+                          }
+         "#M_2 path" {:prop :stroke}
+         "[id='8_2'] path" {:total 100
+                          :prop :stroke
+                          :timing-f {:id :ln
+                                     :duration 100
+                                     }
+                          }
+         "#A_3 path" {:total 10
+                    :timing-f {:id :const
+                               :duration 100
+                               }
+                    :prop :stroke
+                    }
+         "#N_3 path" {:total 100
+                    :prop :stroke
+                    :timing-f {:id :const
+                               :duration 50}
+                    }
+         "[id='1_3'] path" {:total 75
+                          :prop :stroke
+                          :timing-f {:id :sin
+                                     :duration 100
+                                     }
+                          }
+         "#M_3 path" {:prop :stroke}
+         "[id='8_3'] path" {:total 100
+                          :prop :stroke
+                          :timing-f {:id :ln
+                                     :duration 100
+                                     }
+                          }
+         }
                                   }]
 
 
@@ -121,3 +190,5 @@
 
 
 )
+
+
