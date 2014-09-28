@@ -10,10 +10,10 @@
 ;
 ;
 
+(def current-view (atom ""))
+
 (defn run [handler]
   (d/on-load handler))
-
-
 
 (defn- show-loader[]
   (d/set-style! (d/by-id "loader") "height" (aget js/window "innerHeight")))
@@ -25,7 +25,9 @@
 (defn- show-viewport [id]
   (d/show (d/by-id "viewport"))
   (d/show (d/by-id id))
-  )
+  (if-not (= "" @current-view)
+    (d/hide @current-view))
+  (reset! current-view id))
 
 
 (defn- prepare-svg[id handler]
@@ -33,37 +35,48 @@
         f (fn[]
             (if-let [svg (d/svg-doc logo)]
               (do
-                (s/fix-viewBox! (d/svg-doc logo))
+                (s/fix-viewBox! svg)
                 (d/scale-el! logo 0.7)
                 (handler)
                 )
-              (.log "BIDA")
+              (.log js/console "BIDA")
               )
 
             )]
-    (.addEventListener logo "load" f)
-    (if (nil? (d/svg-doc logo))
-      (js/setTimeout (fn[] (prepare-svg id handler)) 300)
+
+    (if (empty? (d/nodelist->coll (.querySelectorAll (d/svg-doc logo) "svg")))
+      ; no svg add listener
+      (.addEventListener logo "load" f)
       (f)
+      ; apply f
       )
+    ;
+
+    ;(if (nil? (d/svg-doc logo))
+
+     ; (js/setTimeout (fn[] (prepare-svg id handler)) 300)
+     ; (f)
+      ;)
 
     ))
 
+(defn init-landing-page []
+  (.log js/console "Junta Power!")
+
+  (a/animation (d/svg-doc (d/by-id "logo-solid-1")) "path") ; hard coded a/animation, for now
+
+  (hide-loader))
+
 
 (defn ^:export app[]
-  ;(enable-console-print!) ; does not work in ie :)
+  (enable-console-print!) ; does not work in ie :)
 
   (show-loader) ; ff fix
   (show-viewport "intro-view")
-  (prepare-svg "logo-solid-1"
-               (fn[]
-                 (.log js/console "Junta Power!")
-
-                 ; hard coded a/animation, for now
-                 (a/animation (d/svg-doc (d/by-id "logo-solid-1")) "path")
+  (prepare-svg "logo-solid-1" init-landing-page)
 
 
-                 (hide-loader))))
+  )
 
 
 ;;;;;;;;;;
