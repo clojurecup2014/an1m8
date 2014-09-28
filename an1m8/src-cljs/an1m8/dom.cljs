@@ -82,11 +82,14 @@
   (if-let [d (aget obj "contentDocument")]
     d
     (.getSVGDocument obj)
-    )
-  )
+    ))
 
 (defn show [el]
   (set-style! el "display" "block"))
 
 (defn hide [el]
     (set-style! el "display" "none"))
+
+(defn on-click! [id f]
+  (if-let [el (by-id id)]
+    (aset el "onclick" f)))

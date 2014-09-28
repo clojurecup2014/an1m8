@@ -22,11 +22,14 @@
 (defn- hide-loader[]
   (d/hide (d/by-id "loader")))
 
-(defn- show-viewport [id]
+(defn- show-viewport [id handler]
   (d/show (d/by-id "viewport"))
   (d/show (d/by-id id))
   (if-not (= "" @current-view)
-    (d/hide @current-view))
+    (d/hide (d/by-id @current-view)))
+
+  (handler)
+
   (reset! current-view id))
 
 
@@ -38,21 +41,32 @@
                 (s/fix-viewBox! svg)
                 (d/scale-el! logo 0.7)
                 (handler)
-                )
-              (.log js/console "BIDA")
-              )
-
-            )]
-
+                )))]
     (if (empty? (d/nodelist->coll (.querySelectorAll (d/svg-doc logo) "svg")))
       (.addEventListener logo "load" f) ; no svg - add listener
       (f) ; apply f
     )))
 
+
+(defn init-gallery-page[]
+
+  )
+
 (defn init-landing-page []
   (.log js/console "Junta Power!")
 
   (a/animation (d/svg-doc (d/by-id "logo-solid-1")) "path") ; hard coded a/animation, for now
+
+  (d/on-click! "gallery-btn"
+               (fn[e]
+                 (show-viewport "gallery-view" init-gallery-page)
+                 false))
+
+  (d/on-click! "editor-btn"
+               (fn[e]
+                 (show-viewport "editor-view" init-gallery-page)
+                 false))
+
 
   (hide-loader))
 
@@ -61,9 +75,9 @@
   (enable-console-print!) ; does not work in ie :)
 
   (show-loader) ; ff fix
-  (show-viewport "intro-view")
-  (prepare-svg "logo-solid-1" init-landing-page)
 
+  (show-viewport "intro-view"
+                 #(prepare-svg "logo-solid-1" init-landing-page))
 
   )
 
