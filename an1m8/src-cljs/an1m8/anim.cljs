@@ -266,6 +266,11 @@
 (defn stop-animation [c]
   (go (>! c :nil)))
 
+(defn stop-animations [c]
+    (doseq [sub-c c]
+      (stop-animation sub-c)
+      ))
+
 ; start
 
 ;(run animation)
@@ -298,7 +303,6 @@
 
 
   )
-
 
 
 ;;;;;;;;;
