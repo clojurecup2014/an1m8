@@ -6,8 +6,7 @@
             [an1m8.svg :as s]
             [ajax.core :refer [GET POST
                                edn-response-format
-                               edn-request-format]])
-  )
+                               edn-request-format]]))
 
 ;
 ;
@@ -81,21 +80,17 @@
   (.log js/console (str "something bad happened: " status " " status-text)))
 
 (defn ^:export init_gallery_page[]
+   (small-logo)
    (GET "/files/" {
               :handler img-handler
               :error-handler error-handler
               :response-format (edn-response-format)
               :request-format (edn-request-format)
-              :keywords? true})
+              :keywords? true}))
 
-
-(hide-loader)
-)
 
 (defn ^:export init_editor_page[]
-
-
-  (hide-loader))
+  (small-logo))
 
 
 
