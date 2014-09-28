@@ -45,20 +45,9 @@
             )]
 
     (if (empty? (d/nodelist->coll (.querySelectorAll (d/svg-doc logo) "svg")))
-      ; no svg add listener
-      (.addEventListener logo "load" f)
-      (f)
-      ; apply f
-      )
-    ;
-
-    ;(if (nil? (d/svg-doc logo))
-
-     ; (js/setTimeout (fn[] (prepare-svg id handler)) 300)
-     ; (f)
-      ;)
-
-    ))
+      (.addEventListener logo "load" f) ; no svg - add listener
+      (f) ; apply f
+    )))
 
 (defn init-landing-page []
   (.log js/console "Junta Power!")
