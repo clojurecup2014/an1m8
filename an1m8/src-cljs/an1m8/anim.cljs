@@ -258,7 +258,8 @@
         f (keyframe-f N color-morph-f)
         c (fn[fill]
               (doseq [f fills]
-                (dom/set-style! f "fill" (colors/rgb->s fill)))
+                (dom/set-style! f "fill" (colors/rgb->s (map #(/ 5) fill)))
+                (dom/set-style! f "stroke" (colors/rgb->s fill)))
             )
         ]
     (an1m t f c)))
