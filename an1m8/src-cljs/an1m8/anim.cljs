@@ -118,16 +118,18 @@
   (let [{total :total
          svg :svg
          els :els
+         prop :prop
          :or { total 100 }} cfg]
 
     #(let [r {:total total
               :i %
-
               :els els
+              :prop prop
               } ]
        (println "put: " (keys r))
-       r ;(nth [:a :b :c :d :e :nil] %)
-       )))
+       (merge r )
+        );(nth [:a :b :c :d :e :nil] %)
+       ))
 
 
 
@@ -138,16 +140,23 @@
   (fn[data]
     (let [{els :els
            prop :prop
-           value :value} data]
+           value :value
+           element :element} data]
       (println "take: " (keys data))
-
       (doseq [el els]
-         (dom/set-style! el "fill" (colors/rgb->s (colors/random-color)))))
+        (case element
+         :fill (dom/set-style! el "fill" (colors/rgb->s (colors/random-color)))
+         :stroke (dom/set-style! el "stroke" (colors/rgb->s (colors/random-color)))
+         (do
+         (dom/set-style! el "fill" (colors/rgb->s (colors/random-color)))
+         (dom/set-style! el "stroke" (colors/rgb->s (colors/random-color)))
 
-
+           )
+         )
+      )
     )
   )
-
+)
 ;;;;;;;;;;;;;;;;;;;;;;;
 ;
 ; animation config
