@@ -71,6 +71,9 @@
   (set-style! el "transform" (str "scale(" scale "," scale ")" )))
 
 
+(defn rotate-el! [el rotate]
+  (set-style! el "transform" (str "rotate (" rotate ")" )))
+
 (defn find-child[el tag]
   (let [matcher (tag-match tag)]
     (filter tag-match (nodelist->coll (dom/getChildren el)))
