@@ -84,3 +84,9 @@
     (.getSVGDocument obj)
     )
   )
+
+(defn show [el]
+  (set-style! el "display" "block"))
+
+(defn hide [el]
+    (set-style! el "display" "none"))

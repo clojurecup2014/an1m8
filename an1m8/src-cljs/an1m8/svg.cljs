@@ -9,11 +9,13 @@
 ;
 
 (defn base-val[el prop]
-  (.-baseVal (aget el prop)))
+  (if-let [v (aget el prop)]
+    (.-baseVal v)))
 
 
 (defn- len [el prop]
-  (.-value (base-val el prop))) ; will units be pixels
+  (if-let [v (base-val el prop)]
+    (.-value v))) ; will units be pixels
 
 
 (defn- empty-rect? [r]
@@ -27,16 +29,13 @@
 
 
 (defn fix-viewBox! [svg]
-   (let [root (svg-root svg)
-         viewBox (base-val root "viewBox")]
-     ;(.log js/console root)
-     ;(.log js/console viewBox)
-
-     (if (empty-rect? viewBox)
-       (let [h (len root "height")
-             w (len root "width")]
-         ;(.log js/console (str "0 0 " w " " h " ")) ; todo: fix this if there is left & top in svg
-         (.setAttribute root "viewBox" (str "0 0 " w " " h " "))))))
+  (let [root (svg-root svg)
+        viewBox (base-val root "viewBox")]
+      (if (empty-rect? viewBox)
+        (let [h (len root "height")
+              w (len root "width")]
+          ;(.log js/console (str "0 0 " w " " h " ")) ; todo: fix this if there is left & top in svg
+          (.setAttribute root "viewBox" (str "0 0 " w " " h " "))))))
 
 
 

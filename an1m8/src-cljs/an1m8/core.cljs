@@ -20,10 +20,12 @@
 
 
 (defn- hide-loader[]
-  (d/set-style! (d/by-id "loader") "display" "none"))
+  (d/hide (d/by-id "loader")))
 
 (defn- show-viewport [id]
-  (d/set-style! (d/by-id "viewport") "display" "block"))
+  (d/show (d/by-id "viewport"))
+  (d/show (d/by-id id))
+  )
 
 
 (defn- prepare-svg[id handler]
@@ -49,16 +51,15 @@
 
 
 (defn ^:export app[]
-  (enable-console-print!) ; does not work in ie :)
+  ;(enable-console-print!) ; does not work in ie :)
 
-  (show-loader)
+  (show-loader) ; ff fix
   (show-viewport "intro-view")
   (prepare-svg "logo-solid-1"
                (fn[]
                  (.log js/console "Junta Power!")
 
-                 ; hard coded a/animation
-
+                 ; hard coded a/animation, for now
                  (a/animation (d/svg-doc (d/by-id "logo-solid-1")) "path")
 
 
