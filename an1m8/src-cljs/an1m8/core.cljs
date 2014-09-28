@@ -48,9 +48,14 @@
     )))
 
 
+;; underscores to for visibiliness from js
+
 (defn ^:export init_gallery_page[]
   (hide-loader)
   )
+
+(defn ^:export init_editor_page[]
+  (hide-loader))
 
 
 (defn ^:export init_landing_page []
@@ -62,12 +67,12 @@
 
                  (d/on-click! "gallery-btn"
                               (fn[e]
-                                (show-viewport "gallery-view" init-gallery-page)
+                                (show-viewport "gallery-view" init_gallery_page)
                                 false))
 
                  (d/on-click! "editor-btn"
                               (fn[e]
-                                (show-viewport "editor-view" init-gallery-page)
+                                (show-viewport "editor-view" init_editor_page)
                                 false))
 
 

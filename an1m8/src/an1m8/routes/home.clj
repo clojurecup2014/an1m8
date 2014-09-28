@@ -1,6 +1,6 @@
 (ns an1m8.routes.home
 
-            (:require 
+            (:require
                       [clojure.java.io]
                       [clj-time.coerce :as tc]
                       [an1m8.layout :as layout]
@@ -13,6 +13,11 @@
                       [noir.util.middleware :refer [app-handler]]
                       [ring.util.response :refer [content-type]]
                       [selmer.parser :refer [render-file]]))
+
+(defonce image-path "/tmp/images")
+
+(defonce config-path "/tmp/config/")
+
 
 (defn- render[args]
   (layout/render "an1m8.html" args))
@@ -41,13 +46,10 @@
 
 (defn gallery-page []
     (layout/render "gallery.html" {:items
-                   (drop 1 
-                         (for [file (file-seq (clojure.java.io/file image-path))] 
+                   (drop 1
+                         (for [file (file-seq (clojure.java.io/file image-path))]
                            (.getName file)))}))
 
-(def image-path "/tmp/images")
-
-(def config-path "/tmp/config/")
 
 (defroutes home-routes
   (GET "/" [] (home-page))
