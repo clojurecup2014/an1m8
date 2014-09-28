@@ -124,10 +124,17 @@
        ;(nth [:a :b :c :d :e :nil] %)
         {
         :els (get-layer svg "#A path")
+        :total total
+        :i %
         }
        )
     )
 
+  )
+
+
+(defn consume-f [cfg]
+  (partial println "take: ")
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;
@@ -143,12 +150,10 @@
               }
          } cfg
 
-        anim-f (animation-f cfg)
-        consume-f (partial println "take: ")
         ]
     {:timing-f (timing-f timing)
-     :frame-f (keyframe-f total anim-f)
-     :consume-f consume-f
+     :frame-f (keyframe-f total (animation-f cfg))
+     :consume-f (consume-f cfg)
      }))
 
 #_(keys (animation-config {:total 10
