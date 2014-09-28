@@ -70,9 +70,9 @@
 
   ;; hardcoded animations
   (GET "/gallery/" []
-       (edn [["/svg/logo.svg" {}]
-             ["/svg/logo_3d.svg" {}]
-             ["/svg/logo_light.svg" {}]
+       (edn [;["/svg/logo.svg" {}]
+             ;["/svg/logo_3d.svg" {}]
+             ["/svg/logo_light.svg" {:duration 1000 :total 100}]
              ;["/svg/1.svg" {}]
              ;["/svg/2.svg" {}]
              ]))

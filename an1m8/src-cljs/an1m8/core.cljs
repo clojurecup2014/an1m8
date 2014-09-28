@@ -97,7 +97,17 @@
                                     ]
 
                               (s/fix-viewBox! svg)
-                              (d/scale-el! el 0.75)))))))))
+                              (d/scale-el! el 0.75)
+
+                                (when (= 1 (count response))
+                                  (println "animating with cfg" cfg)
+
+                                  (a/dev-animation svg cfg)
+                                  )
+
+                                )))))
+
+           )))
 
 
 (defn error-handler [{:keys [status status-text]}]

@@ -227,6 +227,24 @@
 
 ;(run animation)
 
+
+
+;
+;
+;
+;
+; DEV ANIM
+;
+;
+
+
+(defn dev-animation[svg config]
+   (let [{t :timing-f f :frame-f c :consume-f} (animation-config cfg)]
+     (an1m t f c))
+  )
+
+
+
 ;;;;;;;;;
 ;
 ; tests
