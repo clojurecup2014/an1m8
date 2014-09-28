@@ -48,27 +48,30 @@
     )))
 
 
-(defn init-gallery-page[]
-
+(defn ^:export init_gallery_page[]
+  (hide-loader)
   )
 
-(defn init-landing-page []
-  (.log js/console "Junta Power!")
 
-  (a/animation (d/svg-doc (d/by-id "logo-solid-1")) "path") ; hard coded a/animation, for now
+(defn ^:export init_landing_page []
+  (prepare-svg "logo-solid-1"
+               (fn[]
+                 (.log js/console "Junta Power!")
 
-  (d/on-click! "gallery-btn"
-               (fn[e]
-                 (show-viewport "gallery-view" init-gallery-page)
-                 false))
+                 (a/animation (d/svg-doc (d/by-id "logo-solid-1")) "path") ; hard coded a/animation, for now
 
-  (d/on-click! "editor-btn"
-               (fn[e]
-                 (show-viewport "editor-view" init-gallery-page)
-                 false))
+                 (d/on-click! "gallery-btn"
+                              (fn[e]
+                                (show-viewport "gallery-view" init-gallery-page)
+                                false))
+
+                 (d/on-click! "editor-btn"
+                              (fn[e]
+                                (show-viewport "editor-view" init-gallery-page)
+                                false))
 
 
-  (hide-loader))
+                 (hide-loader))))
 
 
 (defn ^:export app[]
@@ -76,8 +79,10 @@
 
   (show-loader) ; ff fix
 
-  (show-viewport "intro-view"
-                 #(prepare-svg "logo-solid-1" init-landing-page))
+
+  (if (= (str js/initial_view js/initial_action) "")
+    (show-viewport "intro-view" init_landing_page)
+    (show-viewport js/initial_view (aget js/an1m8.core js/initial_action)))
 
   )
 

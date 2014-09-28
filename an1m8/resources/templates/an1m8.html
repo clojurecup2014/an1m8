@@ -24,7 +24,7 @@
                     <p>As a proof of this concept, we've animated our logo using this technique. I guess you've noticed that.</p>
                     <p>We've implemented some other neat animations, you can check them in gallery. Or try creating your own animation by uploading SVG.</p>
 
-                    <div class="center" style="margin-top: 3em; margin-bottom: 3em;">
+                    <div class="center" style="margin-top: 4em; margin-bottom: 4em;">
                         <a id="gallery-btn" href="#" class="button">Browse gallery</a>
                         <a id="editor-btn" href="#" class="button">Create animation</a>
                     </div>
@@ -39,24 +39,35 @@
             <div id="editor-view" style="display: none;">
                 <nav class="topbar">AN1M8</nav>
                 <h1>I am the editor</h1>
+
+                <form action="/upload" enctype="multipart/form-data" method="POST">
+                    <input id="file" name="file" type="file" />
+                    <input type="submit" value="upload" />
+                </form>
+
             </div>
 
         </div>
 
         <!--[if IE]><script type="text/javascript" src='/css/ie.js'></script><![endif]-->
 
+
         {% script "/js/goog/base.js" %}
         {% script "/js/app.js" %}
-        <script type="text/javascript">goog.require("an1m8.core");</script>
+        <script type="text/javascript">
+            goog.require("an1m8.core");
+        </script>
 
         <script type="text/javascript">
             var context = "{{servlet-context}}";
 
-            var initial_view = "";
+            var initial_view = "";//"gallery-view";
+            var initial_action = ""; //"init_gallery_page";
 
-            // app initialization
-            // todo - add data here
             an1m8.core.run(an1m8.core.app);
         </script>
+
+
+
     </body>
 </html>
