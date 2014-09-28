@@ -1,5 +1,8 @@
 (ns an1m8.routes.home
-            (:require [clj-time.coerce :as tc]
+
+            (:require 
+                      [clojure.java.io]
+                      [clj-time.coerce :as tc]
                       [an1m8.layout :as layout]
                       [an1m8.util :as util]
                       [compojure.core :refer :all]
@@ -8,7 +11,8 @@
                       [noir.io :as io]
                       [noir.response :as resp]
                       [noir.util.middleware :refer [app-handler]]
-                      [ring.util.response :refer [content-type]]))
+                      [ring.util.response :refer [content-type]]
+                      [selmer.parser :refer [render-file]]))
 
 (defn- render[args]
   (layout/render "an1m8.html" args))
@@ -25,11 +29,6 @@
                 </svg>"
               }))
 
-
-;(defn index-page []
-;      (render))
-
-
 (defn upload-page []
   (layout/render "upload.html"))
 
@@ -40,10 +39,19 @@
       ; (pprint doc)
       {:status "ok"})
 
-(def resource-path "/tmp/")
+(defn gallery-page []
+    (layout/render "gallery.html" {:items
+                   (drop 1 
+                         (for [file (file-seq (clojure.java.io/file image-path))] 
+                           (.getName file)))}))
+
+(def image-path "/tmp/images")
+
+(def config-path "/tmp/config/")
 
 (defroutes home-routes
   (GET "/" [] (home-page))
+
   (GET "/lt" [] (debug-page))
 
   ; (GET "/index" [] (index-page))
@@ -54,15 +62,14 @@
             timed-name (str fname "-" (System/currentTimeMillis))
             file-url (str "/files/" timed-name)
             res (assoc file :filename timed-name)]
-         (io/upload-file resource-path res)
+         (io/upload-file image-path res)
          (resp/redirect file-url)))
 
   (GET "/files/:filename" [filename]
-       (xml (slurp (str resource-path filename))))
+       (xml (slurp (str image-path filename))))
+
+  (GET "/files/"[] (gallery-page))
 
   (POST "/save" {:keys [body-params]}
     (edn (save-document body-params)))
-
-
-
-  )
+)
