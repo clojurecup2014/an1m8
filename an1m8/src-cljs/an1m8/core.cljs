@@ -37,20 +37,24 @@
   (reset! current-view id))
 
 
-(defn- prepare-svg[id handler]
-  (let [logo (d/by-id id)
-        f (fn[]
-            (if-let [svg (d/svg-doc logo)]
-              (do
-                (s/fix-viewBox! svg)
-                (d/scale-el! logo 0.75)
+(defn svg-init [id handler]
+  (let [el (d/by-id id)
+        svg (d/svg-doc el)]
+      (s/fix-viewBox! svg)
+      (d/scale-el! el 0.75)
 
-                (handler)
-                )))]
-    (if (empty? (d/nodelist->coll (.querySelectorAll (d/svg-doc logo) "svg")))
-      (.addEventListener logo "load" f) ; no svg - add listener
-      (f) ; apply f
-    )))
+      (handler)))
+
+
+(defn- prepare-svg[id handler]
+  (let [obj (d/by-id id)
+        svg (d/svg-doc obj)
+        f (partial svg-init id handler)]
+
+    (if (or (nil? svg)
+            (empty? (d/nodelist->coll (.querySelectorAll svg "svg"))))
+      (.addEventListener obj "load" f) ; no svg - add listener
+      (f))))
 
 
 (defn- small-logo[]
