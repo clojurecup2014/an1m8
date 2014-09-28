@@ -101,3 +101,9 @@
 (defn on-click! [id f]
   (if-let [el (by-id id)]
     (aset el "onclick" f)))
+
+
+(defn get-layer [svg selector]
+  (nodelist->coll
+   (.querySelectorAll svg selector)))
+

@@ -119,17 +119,15 @@
          svg :svg
          els :els
          prop :prop
+         f :f
          :or { total 100 }} cfg]
 
-    #(let [r {:total total
-              :i %
-              :els els
-              :prop prop
-              } ]
-       (println "put: " (keys r))
-       (merge r )
-        );(nth [:a :b :c :d :e :nil] %)
-       ))
+    #(do
+       ;(println "put: " (keys r))
+       ;(println "f(" % ") = " (f %) )
+       (merge cfg (if f {;:prop  :fill ;(f %)
+                         :value (f %)} {})))))
+
 
 (defn consume-f
   [{total :total
@@ -138,15 +136,20 @@
   (fn[data]
     (let [{els :els
            prop :prop
-           value :value} data]
+           value :value
+           :or {value (colors/random-color)}} data]
+
+
       (println "take: " (keys data))
+
       (doseq [el els]
         (case prop
-         :fill (dom/set-style! el "fill" (colors/rgb->s (colors/random-color)))
+         :fill (dom/set-style! el "fill" (colors/rgb->s value))
          :stroke (dom/set-style! el "stroke" (colors/rgb->s (colors/random-color)))
          (do
-         (dom/set-style! el "fill" (colors/rgb->s (colors/random-color)))
-         (dom/set-style! el "stroke" (colors/rgb->s (colors/random-color)))
+           ;(println "default animation" value)
+           (dom/set-style! el "fill" (colors/rgb->s value))
+           ;(dom/set-style! el "stroke" (colors/rgb->s (colors/random-color)))
          )
         )
       )
@@ -289,11 +292,11 @@
 (defn dev-animation[svg global-cfg]
 
    (an1m8-many (merge {:svg svg} global-cfg)
-               [{:els (get-layer svg "#A path")}
-                {:els (get-layer svg "#N path")}
-                {:els (get-layer svg "[id='1'] path")}
-                {:els (get-layer svg "#M path")}
-                {:els (get-layer svg "[id='8'] path")}
+               [{:els (dom/get-layer svg "#A path")}
+                {:els (dom/get-layer svg "#N path")}
+                {:els (dom/get-layer svg "[id='1'] path")}
+                {:els (dom/get-layer svg "#M path")}
+                {:els (dom/get-layer svg "[id='8'] path")}
                 ])
 
 
