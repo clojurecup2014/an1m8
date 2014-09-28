@@ -16,18 +16,17 @@
 ;
 ;
 
-
 (defn svg-init [id handler]
   (let [el (d/by-id id)
         svg (d/svg-doc el)]
 
       (s/fix-viewBox! svg)
-      (d/scale-el! el 0.75)
+      (d/scale-el! el 1)
 
       (handler)))
 
 
-(defn- prepare-svg[id handler]
+(defn- wait-for-svg[id handler]
   (let [obj (d/by-id id)
         svg (d/svg-doc obj)
         f (partial svg-init id handler)]
@@ -87,7 +86,7 @@
                                  <object id='" id "'  class='fill-w' data='" svg-path "' type='image/svg+xml'></object></div>
                                  <button id='run-" id "' data-source='" id "'>Run</button>"))
                (.appendChild container el)
-               (prepare-svg id (partial init-gallery-svg i el cfg))
+               (wait-for-svg id (partial init-gallery-svg i el cfg))
 
                (swap! animations assoc id {:cfg cfg})
                ))
@@ -147,6 +146,6 @@
   (enable-console-print!) ; does not work in ie :)
   (.log js/console "Junta Power!")
   (app/show-loader) ; ff fix
-  (prepare-svg "logo-solid-1" app-loaded))
+  (wait-for-svg "logo-solid-1" app-loaded))
 
 
