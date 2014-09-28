@@ -117,40 +117,46 @@
 (defn animation-f [cfg]
   (let [{total :total
          svg :svg
-         id  "N"
+         els :els
+         prop :prop
          :or { total 100 }} cfg]
 
-    #(let [r {:els (get-layer svg (str "#N path"))
-              :total total
+    #(let [r {:total total
               :i %
+              :els els
+              :prop prop
               } ]
        (println "put: " (keys r))
-       (merge r
-               {:element "stroke" }
+       (merge r )
         );(nth [:a :b :c :d :e :nil] %)
-       )))
+       ))
+
 
 
 (defn consume-f
   [{total :total
-    svg :svg}]
+    svg :svg, :as global-cfg}]
 
   (fn[data]
     (let [{els :els
            prop :prop
            value :value
            element :element} data]
-;      (println "take: " (keys data))
+      (println "take: " (keys data))
       (doseq [el els]
-        (println [element])
-         (dom/set-style! el element (colors/rgb->s (colors/random-color))))
+        (case element
+         :fill (dom/set-style! el "fill" (colors/rgb->s (colors/random-color)))
+         :stroke (dom/set-style! el "stroke" (colors/rgb->s (colors/random-color)))
+         (do
+         (dom/set-style! el "fill" (colors/rgb->s (colors/random-color)))
+         (dom/set-style! el "stroke" (colors/rgb->s (colors/random-color)))
 
+           )
+         )
       )
-
-
     )
   )
-
+)
 ;;;;;;;;;;;;;;;;;;;;;;;
 ;
 ; animation config
@@ -217,9 +223,10 @@
      (an1m t f c)))
 
 (defn an1m8-many [global-cfg layers]
-
+  (reduce #(conj
+            %1 (an1m8 (merge global-cfg %2)))
+          [] layers)
   )
-
 
 
 
@@ -282,12 +289,23 @@
 ;
 ;
 
+(defn dev-animation[svg global-cfg]
 
-(defn dev-animation[svg config]
-   (let [full-cfg (merge {:svg svg} config)
-         {t :timing-f f :frame-f c :consume-f}
-         (animation-config full-cfg)]
-     (an1m t f c))
+   (an1m8-many (merge {:svg svg} global-cfg)
+               [{:els (get-layer svg "#A path")}
+                {:els (get-layer svg "#N path")}
+                {:els (get-layer svg "[id='1'] path")}
+                {:els (get-layer svg "#M path")}
+                {:els (get-layer svg "[id='8'] path")}
+                ])
+
+
+   ;(let [full-cfg (merge {:svg svg} config)
+   ;      {t :timing-f f :frame-f c :consume-f}
+   ;      (animation-config full-cfg)]
+   ;  (an1m t f c))
+
+
   )
 
 
