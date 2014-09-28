@@ -56,6 +56,12 @@
   (prepare-svg "logo-solid-1"
                (fn[]
                  (.log js/console "Junta Power!")
+
+                 ; hard coded a/animation
+
+                 (a/animation (d/svg-doc (d/by-id "logo-solid-1")) "path")
+
+
                  (hide-loader))))
 
 

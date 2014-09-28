@@ -127,8 +127,8 @@
         fills   (get-layer svg selector)
 
         strokes (get-layer svg "[fill]")
-        from [255 0 0]
-        to [0 0 0]
+        from [0 0 0]
+        to [255 0 0]
         frames 100
         wait-interval (nth-val 0 2500 frames)
         color-f (partial (color-animation-fn from to) frames)]
