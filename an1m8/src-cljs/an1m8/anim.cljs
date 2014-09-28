@@ -190,9 +190,15 @@
   (let [N 100
 
         fills (get-layer svg selector)
-        color-morph-f (partial (color-animation-fn [0 0 0] [255 0 0]) N)
 
-        t (timing-f {:total N :duration 10})
+        ;color-morph-f (partial (color-animation-fn [0 0 0] [255 0 0]) N)
+        color-morph-f (fn [x]
+
+                        (colors/random-color)
+                        )
+
+
+        t (timing-f {:total N :duration 500})
         f (keyframe-f N color-morph-f)
         c (fn[fill]
               (doseq [f fills]
@@ -200,6 +206,9 @@
             )
         ]
     (an1m t f c)))
+
+(defn stop-animation [c]
+  (go (>! c :nil)))
 
 ; start
 
