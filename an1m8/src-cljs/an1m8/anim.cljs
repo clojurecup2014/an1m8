@@ -1,11 +1,52 @@
 (ns an1m8.anim
   "Animation core"
 	(:require [cljs.core.async :as async
-             	:refer [<! >! chan put! timeout]]
+             	:refer [<! >! chan put! timeout close!]]
             [an1m8.dom :as dom]
             [an1m8.colors :as colors]
             )
 	(:require-macros [cljs.core.async.macros :refer [go]]))
+
+
+;
+; stepping functions
+;
+
+(defn nth-val[start end n]
+  (let [N (if (< n 2) 2 (- n 1))]
+    (-> end (+ start) (/ N))))
+
+; usually curry this function for specified start/end/n
+(defn- step-fn[convert-fn start end n current]
+  (let [step (nth-val start end n)
+        op (if (<= start end) + -)]
+    (convert-fn (op start (* step current)))))
+
+(def long-step (partial step-fn long))
+
+(def float-step (partial step-fn identity))
+
+
+
+;;;;
+;
+; time function
+;
+(defn timing-f[params]
+  (let [{id :id
+         duration :duration
+         :or {id :const duration 1000}} params]
+    (case id
+    ; same intervals of time between keyframe
+      :const (constantly duration)
+      (constantly duration)
+      )
+  ))
+
+
+;((timing-f {:duration 100}))
+;((timing-f {:duration 1000 :id :const}))
+
 
 
 ;;;;;;;;;;;;;;;;;;
@@ -46,103 +87,87 @@
 ; [:asc 1] [:asc 6] [:desc 9] [:desc 8] [:desc 5] [:asc 0]
 
 
+;;;;;;;;;;;;;;;;;;;;;;;
+;
+; animation config
+;
+(defn animation-config [cfg]
+  (let [{total :total
+         timing :timing-f
+         :or {
+              total 100
+              timing {}
+              }
+         } cfg
+
+        t (timing-f timing)
+        anim-f #(do (println "put: " %) (nth [:a :b :c :d :e :nil] %)  )
+        consume-f (partial println "take: ")
+        ]
+    {:timing-f t
+     :frame-f (keyframe-f total anim-f)
+     :consume-f consume-f
+     }))
+
+#_(keys (animation-config {:total 10
+                   :timing-f {:duration 500}
+                   }))
+
+;(animation-config {})
+;(animation-config {:foo 321})
+
+
 ; animation fn consist of timing and animation
-
-
 ; f is keyframe func
-
 ; timing-f total is a step function
 (defn an1m [timing-f frame-f consume-f]
-  (let [c (chan 10) ; 100 is a buffer
+  (let [c (chan 100) ; 100 is a buffer
         c1 (chan)]
 
     ; init
     (go (>! c1 (frame-f)))
 
     ; produce
-    (go (while true
+    (go (loop []
           (let [[op i] (<! c1)]
             (<! (timeout (timing-f i)))
-            (>! c (frame-f i))
-            (go (>! c1 (frame-f op i)))
-            )))
+            (when-let [r (frame-f i)]
+              (if (= :nil r)
+                  (close! c)
+                  (do
+                    (>! c r)
+                    (go (>! c1 (frame-f op i)))
+                    (recur)))))
+          (close! c1)))
 
     ; consume
-    (go (while true
-         (let [data (<! c)]
-            (consume-f data))))
-
+    (go (loop []
+          (when-let [data (<! c)]
+            (when-not (= :nil data)
+              (consume-f data)
+              (recur)))
+          (close! c)))
+    c
     ))
 
+
+(defn an1m8 [cfg]
+   (let [{t :timing-f f :frame-f c :consume-f} (animation-config cfg)]
+     (an1m t f c)))
+
+
 ;
-; animation configuration
 ;
-
-(defn gen-timing-f[params]
-  (let [{id :id :or {id :const}
-         duration :duration :or {duration 1000}
-         } params]
-    (case id
-    ; same intervals of time between keyframe
-      :const (constantly duration)
-      (constantly duration)
-      )
-  ))
-
-
-;((gen-timing-f {:duration 100}))
-;((gen-timing-f {:duration 1000} :const))
-
-
-(defn animation-config [cfg]
-  (let [{total :total :or {total 100}
-         timing :timing-f :or {:duration 100}
-         } cfg
-
-        timing-f (gen-timing-f timing)
-        ]
-
-    ;[:animation :for total :frames]
-
-
-    ))
-
-(animation-config {:total 10
-                   :timing-f {:duration 500}
-                   })
-
-;(animation-config {})
-;(animation-config {:foo 321})
-
-
-
-
-
 ; older stuff
-
-(defn nth-val[start end n]
-  (let [N (if (< n 2) 2 (- n 1))]
-    (-> end (+ start) (/ N))))
-
-; usually curry this function for specified start/end/n
-(defn- step-fn[convert-fn start end n current]
-  (let [step (nth-val start end n)
-        op (if (<= start end) + -)]
-    (convert-fn (op start (* step current)))))
-
-(def long-step (partial step-fn long))
-
-(def float-step (partial step-fn identity))
+;
+;
 
 
 
-
-
-
-
-
-;;;;;;;;;;;;;;
-; animations
+;;;;;;;;;;;;;;;
+;
+; specific
+;   animations
 
 (defn color-animation-fn[from to]
   (let [[r1 g1 b1] from
@@ -152,7 +177,6 @@
         blue   (partial long-step b1 b2)]
     (fn [total-frames n]
       [(red total-frames n) (green total-frames n) (blue total-frames n)])))
-
 
 ; ((color-animation-fn [0 0 0] [255 0 0]) 255 128)
 
