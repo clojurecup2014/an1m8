@@ -63,6 +63,7 @@
         {% script "/js/goog/base.js" %}
         {% script "/js/app.js" %}
         <script type="text/javascript">
+            goog.require("an1m8.app");
             goog.require("an1m8.core");
         </script>
 
@@ -72,7 +73,7 @@
             var initial_view = ""; // "gallery-view";
             var initial_action = ""; // "init_gallery_page";
 
-            an1m8.core.run(an1m8.core.app);
+            an1m8.app.run(an1m8.core.app_fn);
         </script>
 
 
