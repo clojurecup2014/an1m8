@@ -35,22 +35,27 @@
 ; main
 
 (d/on-load (fn[]
-; does not work in ie :)
 
-             (enable-console-print!)
+             (enable-console-print!) ; does not work in ie :)
              (println "Junta Power!")
 
              (let [logos (map d/by-id ["logo" "logo-light" "logo-3d" "logo-solid-1"])]
                 (doseq [logo logos]
+
+                    ;(js/fix_ie_svg logo)
                     (s/fix-viewBox! (d/svg-doc logo))
-                    (d/scale-el! logo 0.5)))
+                    (d/scale-el! logo 0.7)
+
+                  ))
 
                (let [timing (constantly 1500)
                      frame-f (a/keyframe-f 10 identity)
                      consume-f println
                      ]
 
-                 (a/an1m timing frame-f consume-f))
+                 ; do not kill ie, for now
+                 ;(a/an1m timing frame-f consume-f)
+                 )
 
 
                ; svg
