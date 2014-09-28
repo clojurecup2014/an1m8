@@ -76,6 +76,33 @@
 
 ;; underscores to for visibiliness from js
 
+(defonce animations (atom {}))
+
+(defn run-animation [svg-id]
+  (let [status (get @animations svg-id)]
+    (swap! animations merge
+           {svg-id
+            (if-not (:running status)
+              (merge status {:running
+                             (a/dev-animation (d/svg-doc (d/by-id svg-id)) status)})
+              (do
+                ; stop animations
+                (a/stop-animations (:running status))
+                (dissoc status :running))
+
+              )})))
+
+
+(defn init-gallery-svg[i el cfg]
+  (let [el (d/by-id (str "svg-" i))
+        svg (d/svg-doc el)]
+
+    (s/fix-viewBox! svg)
+    (d/scale-el! el 0.75)
+
+    (d/on-click! (str "run-svg-" i)
+       #(this-as b (run-animation (.getAttribute b "data-source"))))))
+
 
 (defn gallery-handler [response]
   (let [container (d/by-id "anim-list")]
@@ -84,30 +111,25 @@
                    el (.createElement js/document "div")
                    id (str "svg-" i)
                    ]
+
+
                (d/set-html! el
                             (str "<div id='svg-wrapper-" i "' class='bordered w_2_3' style='display: inline-block;' >
                                  <object id='" id "'  class='fill-w' data='" svg-path "' type='image/svg+xml'></object></div>
-                                 <button>Run</button>")
-                            )
+                                 <button id='run-" id "' data-source='" id "'>Run</button>"))
                (.appendChild container el)
-               (prepare-svg id
-                            (fn[]
-                              (let [el (d/by-id (str "svg-" i))
-                                    svg (d/svg-doc el)
-                                    ]
+               (prepare-svg id (partial init-gallery-svg i el cfg))
 
-                              (s/fix-viewBox! svg)
-                              (d/scale-el! el 0.75)
+               (swap! animations assoc id {:cfg cfg})
+               ))
 
-                                (when (= 1 (count response))
-                                  (println "animating with cfg" cfg)
+           )
 
-                                  (a/dev-animation svg cfg)
-                                  )
+    (when (= 1 (count response))
+      (println "animating with cfg" (second (first response)))
+      (a/dev-animation (d/svg-doc (d/by-id "svg-0")) (second (first response))))
 
-                                )))))
-
-           )))
+    ))
 
 
 (defn error-handler [{:keys [status status-text]}]
