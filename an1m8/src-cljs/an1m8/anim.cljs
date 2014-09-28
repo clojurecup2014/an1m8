@@ -37,6 +37,13 @@
          duration :duration
          :or {id :const duration 1000}} params]
     (case id
+      :ln #(do
+               Math/log
+
+             )
+       :random (do
+                 Math/random
+                )
     ; same intervals of time between keyframe
       :const (constantly duration)
       (constantly duration)
