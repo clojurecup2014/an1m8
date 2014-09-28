@@ -48,7 +48,7 @@
                  (+ 200 (Math/sin (+ % 100)))
               )
 
-        :list #(nth (:duration params) (rem % (count (:duration params))))
+       :list #(nth (:duration params) (rem % (count (:duration params))))
 
     ; same intervals of time between keyframe
       :const (constantly duration)
@@ -124,14 +124,12 @@
     #(let [r {:total total
               :i %
               :els els
-              :prop prop
+              :prop :foo
               } ]
        (println "put: " (keys r))
        (merge r )
         );(nth [:a :b :c :d :e :nil] %)
        ))
-
-
 
 (defn consume-f
   [{total :total
@@ -140,19 +138,17 @@
   (fn[data]
     (let [{els :els
            prop :prop
-           value :value
-           element :element} data]
+           value :value} data]
       (println "take: " (keys data))
       (doseq [el els]
-        (case element
+        (case prop
          :fill (dom/set-style! el "fill" (colors/rgb->s (colors/random-color)))
          :stroke (dom/set-style! el "stroke" (colors/rgb->s (colors/random-color)))
          (do
          (dom/set-style! el "fill" (colors/rgb->s (colors/random-color)))
          (dom/set-style! el "stroke" (colors/rgb->s (colors/random-color)))
-
-           )
          )
+        )
       )
     )
   )
