@@ -6,7 +6,7 @@
     <body>
         {% include "templates/loader.html" %}
         <div id="viewport" style="display: none;">
-            <div id="intro-view">
+            <div id="intro-view" style="display: none;">
                 <div class="svg-wrapper fill-w">
                     <object id="logo-solid-1" class="fill-w" data="/svg/logo_solid_1.svg" type="image/svg+xml" ></object>
                 </div>
@@ -25,10 +25,20 @@
                     <p>We've implemented some other neat animations, you can check them in gallery. Or try creating your own animation by uploading SVG.</p>
 
                     <div class="center" style="margin-top: 3em; margin-bottom: 3em;">
-                        <a href="#" class="button">Browse gallery</a>
-                        <a href="#" class="button">Create animation</a>
+                        <a id="gallery-btn" href="#" class="button">Browse gallery</a>
+                        <a id="editor-btn" href="#" class="button">Create animation</a>
                     </div>
                 </div>
+            </div>
+
+            <div id="gallery-view" style="display: none;">
+                <nav class="topbar">AN1M8</nav>
+                <h1>I am the galery</h1>
+            </div>
+
+            <div id="editor-view" style="display: none;">
+                <nav class="topbar">AN1M8</nav>
+                <h1>I am the editor</h1>
             </div>
 
         </div>
@@ -41,6 +51,8 @@
 
         <script type="text/javascript">
             var context = "{{servlet-context}}";
+
+            var initial_view = "";
 
             // app initialization
             // todo - add data here

@@ -10,20 +10,27 @@
 ;
 ;
 
+(def current-view (atom ""))
+
 (defn run [handler]
   (d/on-load handler))
-
-
 
 (defn- show-loader[]
   (d/set-style! (d/by-id "loader") "height" (aget js/window "innerHeight")))
 
 
 (defn- hide-loader[]
-  (d/set-style! (d/by-id "loader") "display" "none"))
+  (d/hide (d/by-id "loader")))
 
-(defn- show-viewport [id]
-  (d/set-style! (d/by-id "viewport") "display" "block"))
+(defn- show-viewport [id handler]
+  (d/show (d/by-id "viewport"))
+  (d/show (d/by-id id))
+  (if-not (= "" @current-view)
+    (d/hide (d/by-id @current-view)))
+
+  (handler)
+
+  (reset! current-view id))
 
 
 (defn- prepare-svg[id handler]
@@ -31,38 +38,48 @@
         f (fn[]
             (if-let [svg (d/svg-doc logo)]
               (do
-                (s/fix-viewBox! (d/svg-doc logo))
+                (s/fix-viewBox! svg)
                 (d/scale-el! logo 0.7)
                 (handler)
-                )
-              (.log "BIDA")
-              )
+                )))]
+    (if (empty? (d/nodelist->coll (.querySelectorAll (d/svg-doc logo) "svg")))
+      (.addEventListener logo "load" f) ; no svg - add listener
+      (f) ; apply f
+    )))
 
-            )]
-    (.addEventListener logo "load" f)
-    (if (nil? (d/svg-doc logo))
-      (js/setTimeout (fn[] (prepare-svg id handler)) 300)
-      (f)
-      )
 
-    ))
+(defn init-gallery-page[]
+
+  )
+
+(defn init-landing-page []
+  (.log js/console "Junta Power!")
+
+  (a/animation (d/svg-doc (d/by-id "logo-solid-1")) "path") ; hard coded a/animation, for now
+
+  (d/on-click! "gallery-btn"
+               (fn[e]
+                 (show-viewport "gallery-view" init-gallery-page)
+                 false))
+
+  (d/on-click! "editor-btn"
+               (fn[e]
+                 (show-viewport "editor-view" init-gallery-page)
+                 false))
+
+
+  (hide-loader))
 
 
 (defn ^:export app[]
   (enable-console-print!) ; does not work in ie :)
 
-  (show-loader)
-  (show-viewport "intro-view")
-  (prepare-svg "logo-solid-1"
-               (fn[]
-                 (.log js/console "Junta Power!")
+  (show-loader) ; ff fix
 
-                 ; hard coded a/animation
+  (show-viewport "intro-view"
+                 #(prepare-svg "logo-solid-1" init-landing-page))
 
-                 (a/animation (d/svg-doc (d/by-id "logo-solid-1")) "path")
-
-
-                 (hide-loader))))
+  )
 
 
 ;;;;;;;;;;
