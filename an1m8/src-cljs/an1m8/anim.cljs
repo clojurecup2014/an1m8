@@ -38,12 +38,17 @@
          :or {id :const duration 1000}} params]
     (case id
       :ln #(do
-               Math/log
+               Math/log ( + % 333)
 
              )
-       :random (do
-                 Math/random
+       :rand #(do
+                 (* (rand-int %) 10)
                 )
+
+       :sin #(do
+                 (+ 200 (Math/sin (+ % 100)))
+
+               )
     ; same intervals of time between keyframe
       :const (constantly duration)
       (constantly duration)
@@ -205,7 +210,7 @@
                         )
 
 
-        t (timing-f {:total N :duration 500})
+        t (timing-f {:total N :duration 500 :id :sin})
         f (keyframe-f N color-morph-f)
         c (fn[fill]
               (doseq [f fills]
