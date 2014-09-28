@@ -1,11 +1,52 @@
 (ns an1m8.anim
   "Animation core"
 	(:require [cljs.core.async :as async
-             	:refer [<! >! chan put! timeout]]
+             	:refer [<! >! chan put! timeout close!]]
             [an1m8.dom :as dom]
             [an1m8.colors :as colors]
             )
 	(:require-macros [cljs.core.async.macros :refer [go]]))
+
+
+;
+; stepping functions
+;
+
+(defn nth-val[start end n]
+  (let [N (if (< n 2) 2 (- n 1))]
+    (-> end (+ start) (/ N))))
+
+; usually curry this function for specified start/end/n
+(defn- step-fn[convert-fn start end n current]
+  (let [step (nth-val start end n)
+        op (if (<= start end) + -)]
+    (convert-fn (op start (* step current)))))
+
+(def long-step (partial step-fn long))
+
+(def float-step (partial step-fn identity))
+
+
+
+;;;;
+;
+; time function
+;
+(defn timing-f[params]
+  (let [{id :id
+         duration :duration
+         :or {id :const duration 1000}} params]
+    (case id
+    ; same intervals of time between keyframe
+      :const (constantly duration)
+      (constantly duration)
+      )
+  ))
+
+
+;((timing-f {:duration 100}))
+;((timing-f {:duration 1000 :id :const}))
+
 
 
 ;;;;;;;;;;;;;;;;;;
@@ -46,61 +87,86 @@
 ; [:asc 1] [:asc 6] [:desc 9] [:desc 8] [:desc 5] [:asc 0]
 
 
+;;;;;;;;;;;;;;;;;;;;;;;
+;
+; animation config
+;
+(defn animation-config [cfg]
+  (let [{total :total
+         timing :timing-f
+         :or {
+              total 100
+              timing {}
+              }
+         } cfg
+
+        anim-f #(do (println "put: " %) (nth [:a :b :c :d :e :nil] %)  )
+        consume-f (partial println "take: ")
+        ]
+    {:timing-f (timing-f timing)
+     :frame-f (keyframe-f total anim-f)
+     :consume-f consume-f
+     }))
+
+#_(keys (animation-config {:total 10
+                   :timing-f {:duration 500}
+                   }))
+
+;(animation-config {})
+;(animation-config {:foo 321})
+
+
 ; animation fn consist of timing and animation
-
-
 ; f is keyframe func
-
 ; timing-f total is a step function
 (defn an1m [timing-f frame-f consume-f]
-  (let [c (chan 10) ; 100 is a buffer
+  (let [c (chan 100) ; 100 is a buffer
         c1 (chan)]
 
     ; init
     (go (>! c1 (frame-f)))
 
     ; produce
-    (go (while true
+    (go (loop []
           (let [[op i] (<! c1)]
             (<! (timeout (timing-f i)))
-            (>! c (frame-f i))
-            (go (>! c1 (frame-f op i)))
-            )))
+            (when-let [r (frame-f i)]
+              (if (= :nil r)
+                  (close! c)
+                  (do
+                    (>! c r)
+                    (go (>! c1 (frame-f op i)))
+                    (recur)))))
+          (close! c1)))
 
     ; consume
-    (go (while true
-         (let [data (<! c)]
-            (consume-f data))))
-
+    (go (loop []
+          (when-let [data (<! c)]
+            (when-not (= :nil data)
+              (consume-f data)
+              (recur)))
+          (close! c)))
+    c
     ))
 
 
+(defn an1m8 [cfg]
+   (let [{t :timing-f f :frame-f c :consume-f} (animation-config cfg)]
+     (an1m t f c)))
 
+
+;
+;
 ; older stuff
-
-(defn nth-val[start end n]
-  (let [N (if (< n 2) 2 (- n 1))]
-    (-> end (+ start) (/ N))))
-
-; usually curry this function for specified start/end/n
-(defn- step-fn[convert-fn start end n current]
-  (let [step (nth-val start end n)
-        op (if (<= start end) + -)]
-    (convert-fn (op start (* step current)))))
-
-(def long-step (partial step-fn long))
-
-(def float-step (partial step-fn identity))
+;
+;
 
 
 
-
-
-
-
-
-;;;;;;;;;;;;;;
-; animations
+;;;;;;;;;;;;;;;
+;
+; specific
+;   animations
 
 (defn color-animation-fn[from to]
   (let [[r1 g1 b1] from
@@ -110,7 +176,6 @@
         blue   (partial long-step b1 b2)]
     (fn [total-frames n]
       [(red total-frames n) (green total-frames n) (blue total-frames n)])))
-
 
 ; ((color-animation-fn [0 0 0] [255 0 0]) 255 128)
 
@@ -122,59 +187,28 @@
 
 
 (defn animation[svg selector]
-  (let [c (chan 100)             ; the channel for animation
-        ;fills   (get-layer svg "[fill]")
-        fills   (get-layer svg selector)
+  (let [N 100
 
-        strokes (get-layer svg "[fill]")
-        from [0 0 0]
-        to [255 0 0]
-        frames 100
-        wait-interval (nth-val 0 2500 frames)
-        color-f (partial (color-animation-fn from to) frames)]
+        fills (get-layer svg selector)
 
-    ; ? how timing will work if the buffer of the channel will be overflown - use interval?
-    (let [c1 (chan)]                ; internal channel for
-      ; send first msg to fade out
-      (go (>! c1 [:dec 0]))
+        ;color-morph-f (partial (color-animation-fn [0 0 0] [255 0 0]) N)
+        color-morph-f (fn [x]
 
-      ; loop forever
-      (go
-       (while true
-         (<! (timeout wait-interval)) ; wait
-
-         (let [[op i] (<! c1)]        ; get new color change
-
-           (>! c {:fill (color-f i)}) ; send message to animation channel
-
-           (go (>! c1                 ; send a new color change
-                   (cond
-                    (and (= 0 i) (= :dec op)) [:asc i]
-                    (= :dec op)               [:dec (dec i)]
-                    (and (= :asc op) (= frames (inc i))) [:dec i]
-                    (= :asc op)                          [:asc (inc i)])))))))
+                        (colors/random-color)
+                        )
 
 
+        t (timing-f {:total N :duration 500})
+        f (keyframe-f N color-morph-f)
+        c (fn[fill]
+              (doseq [f fills]
+                (dom/set-style! f "fill" (colors/rgb->s fill)))
+            )
+        ]
+    (an1m t f c)))
 
-    (go
-     (while true
-       (let [{fill :fill
-              stroke :stroke} (<! c)]
-
-         ;(println [fill stroke])
-
-         (if fill
-           (doseq [f fills]
-             (dom/set-style! f "fill" (colors/rgb->s fill))
-             ))
-
-         (if stroke
-           (doseq [s strokes]
-             (dom/set-style! s "stroke" (colors/rgb->s stroke))
-             )))))
-
-    )
-  )
+(defn stop-animation [c]
+  (go (>! c :nil)))
 
 ; start
 

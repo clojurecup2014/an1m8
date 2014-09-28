@@ -82,12 +82,21 @@
 (defn ^:export init_editor_page[]
   (hide-loader))
 
+
 (defn ^:export init_landing_page []
   (prepare-svg "logo-solid-1"
                (fn[]
                  (.log js/console "Junta Power!")
 
-                 (a/animation (d/svg-doc (d/by-id "logo-solid-1")) "path") ; hard coded a/animation, for now
+                 (let [c (a/animation (d/svg-doc (d/by-id "logo-solid-1")) "path")]
+                   ; hard coded a/animation, for now
+                   (d/on-click! "stop" (fn[e]
+                                         (a/stop-animation c)))
+                   )
+
+
+
+                 (a/an1m8 {:timing-f {:duration 500}})
 
                  (d/on-click! "gallery-btn"
                               (fn[e]
