@@ -117,14 +117,17 @@
 (defn animation-f [cfg]
   (let [{total :total
          svg :svg
+         id  "N"
          :or { total 100 }} cfg]
 
-    #(let [r {:els (get-layer svg "#A path")
+    #(let [r {:els (get-layer svg (str "#N path"))
               :total total
               :i %
               } ]
        (println "put: " (keys r))
-       r ;(nth [:a :b :c :d :e :nil] %)
+       (merge r
+               {:element "stroke" }
+        );(nth [:a :b :c :d :e :nil] %)
        )))
 
 
@@ -135,11 +138,12 @@
   (fn[data]
     (let [{els :els
            prop :prop
-           value :value} data]
-      (println "take: " (keys data))
-
+           value :value
+           element :element} data]
+;      (println "take: " (keys data))
       (doseq [el els]
-         (dom/set-style! el "fill" (colors/rgb->s (colors/random-color))))
+        (println [element])
+         (dom/set-style! el element (colors/rgb->s (colors/random-color))))
 
       )
 
