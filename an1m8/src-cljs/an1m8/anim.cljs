@@ -74,6 +74,48 @@
 
     ))
 
+;
+; animation configuration
+;
+
+(defn gen-timing-f[params]
+  (let [{id :id :or {id :const}
+         duration :duration :or {duration 1000}
+         } params]
+    (case id
+    ; same intervals of time between keyframe
+      :const (constantly duration)
+      (constantly duration)
+      )
+  ))
+
+
+;((gen-timing-f {:duration 100}))
+;((gen-timing-f {:duration 1000} :const))
+
+
+(defn animation-config [cfg]
+  (let [{total :total :or {total 100}
+         timing :timing-f :or {:duration 100}
+         } cfg
+
+        timing-f (gen-timing-f timing)
+        ]
+
+    ;[:animation :for total :frames]
+
+
+    ))
+
+(animation-config {:total 10
+                   :timing-f {:duration 500}
+                   })
+
+;(animation-config {})
+;(animation-config {:foo 321})
+
+
+
 
 
 ; older stuff
