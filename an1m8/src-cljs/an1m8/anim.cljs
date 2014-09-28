@@ -100,6 +100,36 @@
 ; [:asc 1] [:asc 6] [:desc 9] [:desc 8] [:desc 5] [:asc 0]
 
 
+;
+; svg stuff - tmp
+;
+
+(defn- get-layer [svg selector]
+  (dom/nodelist->coll
+   (.querySelectorAll svg selector)))
+
+;
+; animation func
+;
+
+
+
+(defn animation-f [cfg]
+  (let [{total :total
+         svg :svg
+
+         :or { total 100 }} cfg]
+
+    #(do (println "put: " %)
+       ;(nth [:a :b :c :d :e :nil] %)
+        {
+        :els (get-layer svg "#A path")
+        }
+       )
+    )
+
+  )
+
 ;;;;;;;;;;;;;;;;;;;;;;;
 ;
 ; animation config
@@ -113,7 +143,7 @@
               }
          } cfg
 
-        anim-f #(do (println "put: " %) (nth [:a :b :c :d :e :nil] %)  )
+        anim-f (animation-f cfg)
         consume-f (partial println "take: ")
         ]
     {:timing-f (timing-f timing)
@@ -168,18 +198,13 @@
      (an1m t f c)))
 
 
-;
-;
-; older stuff
-;
-;
-
-
 
 ;;;;;;;;;;;;;;;
 ;
 ; specific
 ;   animations
+;
+; TODO: update
 
 (defn color-animation-fn[from to]
   (let [[r1 g1 b1] from
@@ -192,10 +217,6 @@
 
 ; ((color-animation-fn [0 0 0] [255 0 0]) 255 128)
 
-
-(defn- get-layer [svg selector]
-  (dom/nodelist->coll
-   (.querySelectorAll svg selector)))
 
 
 
@@ -239,7 +260,9 @@
 
 
 (defn dev-animation[svg config]
-   (let [{t :timing-f f :frame-f c :consume-f} (animation-config cfg)]
+   (let [full-cfg (merge {:svg svg} cfg )
+         {t :timing-f f :frame-f c :consume-f}
+         (animation-config full-cfg)]
      (an1m t f c))
   )
 
