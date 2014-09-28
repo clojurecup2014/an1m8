@@ -252,14 +252,9 @@
 
         fills (get-layer svg selector)
 
-        color-morph-f (partial (color-animation-fn [0 0 0] [255 100  100]) N)
-        ;color-morph-f (fn [x]
-        ;
-        ;                (colors/random-color)
-        ;                )
+        color-morph-f (partial (color-animation-fn [0 0 0] [255 175 100]) N)
 
-
-        t (timing-f {:total N :duration 500})
+        t (timing-f {:total N :duration 10})
         f (keyframe-f N color-morph-f)
         c (fn[fill]
               (doseq [f fills]
