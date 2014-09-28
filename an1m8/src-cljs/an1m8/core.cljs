@@ -14,6 +14,11 @@
   (d/on-load handler))
 
 
+
+(defn- show-loader[]
+  (d/set-style! (d/by-id "loader") "height" (aget js/window "innerHeight")))
+
+
 (defn- hide-loader[]
   (d/set-style! (d/by-id "loader") "display" "none"))
 
@@ -22,21 +27,31 @@
 
 
 (defn- prepare-svg[id handler]
-  (let [logo (d/by-id id)]
-    (.addEventListener logo
-                       "load"
-                       (fn []
-                         (s/fix-viewBox! (d/svg-doc logo))
-                         (d/scale-el! logo 0.7)
+  (let [logo (d/by-id id)
+        f (fn[]
+            (if-let [svg (d/svg-doc logo)]
+              (do
+                (s/fix-viewBox! (d/svg-doc logo))
+                (d/scale-el! logo 0.7)
+                (handler)
+                )
+              (.log "BIDA")
+              )
 
-                         (handler)
-                         )
-                       false)))
+            )]
+    (.addEventListener logo "load" f)
+    (if (nil? (d/svg-doc logo))
+      (js/setTimeout (fn[] (prepare-svg id handler)) 300)
+      (f)
+      )
+
+    ))
 
 
 (defn ^:export app[]
   (enable-console-print!) ; does not work in ie :)
 
+  (show-loader)
   (show-viewport "intro-view")
   (prepare-svg "logo-solid-1"
                (fn[]
@@ -50,17 +65,17 @@
 
 ;(a/test-core-async)
 
-(defn ^:export test_svg [id]
-  (let [el (d/by-id id)
-        svg (d/svg-doc el)]
-    (if svg
-      (s/fix-viewBox! svg)
-      (js/alert "Error while loading svg"))))
+;(defn ^:export test_svg [id]
+;  (let [el (d/by-id id)
+;        svg (d/svg-doc el)]
+;    (if svg
+;      (s/fix-viewBox! svg)
+;      (js/alert "Error while loading svg"))))
 
 
-(defn ^:export test_scaling [id scale]
-	(let [el (d/by-id id)]
-		(d/scale-el! el scale)))
+;(defn ^:export test_scaling [id scale]
+;	(let [el (d/by-id id)]
+;		(d/scale-el! el scale)))
 
 
 ;;;;;;;;;;;
