@@ -1,8 +1,10 @@
 (ns an1m8.core
   "I do stuff"
-	(:require [an1m8.dom :as d]
+	(:require 
+            [an1m8.dom :as d]
             [an1m8.anim :as a]
-            [an1m8.svg :as s]))
+            [an1m8.svg :as s]
+            [ajax.core :refer [GET POST]]))
 
 ;
 ;
@@ -50,13 +52,27 @@
 
 ;; underscores to for visibiliness from js
 
+
+(defn handler [response]
+  (.log js/console (str  response)))
+
+(defn error-handler [{:keys [status status-text]}]
+  (.log js/console (str "something bad happened: " status " " status-text)))
+
 (defn ^:export init_gallery_page[]
-  (hide-loader)
-  )
+   (let [images (GET "/files/" {
+              :handler handler
+              :error-handler error-handler
+              :response-format :edn
+              :keywords? true})]
+     (loop [image images] (println image))) 
+    
+
+(hide-loader)
+)
 
 (defn ^:export init_editor_page[]
   (hide-loader))
-
 
 (defn ^:export init_landing_page []
   (prepare-svg "logo-solid-1"

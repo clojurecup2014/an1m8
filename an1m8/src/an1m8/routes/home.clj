@@ -45,10 +45,8 @@
       {:status "ok"})
 
 (defn gallery-page []
-    (layout/render "gallery.html" {:items
-                   (drop 1
-                         (for [file (file-seq (clojure.java.io/file image-path))]
-                           (.getName file)))}))
+    {:images
+     (drop 1 (for [file (file-seq (clojure.java.io/file image-path))] (.getName file)))})
 
 
 (defroutes home-routes
@@ -70,7 +68,11 @@
   (GET "/files/:filename" [filename]
        (xml (slurp (str image-path filename))))
 
-  (GET "/files/"[] (gallery-page))
+  
+(GET "/files/"[]
+     (edn (gallery-page))
+)
+  
 
   (POST "/save" {:keys [body-params]}
     (edn (save-document body-params)))
