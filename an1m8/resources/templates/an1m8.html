@@ -10,7 +10,6 @@
         </div>
         <div id="viewport" style="display: none;">
             <div id="intro-view" style="display: none;">
-                <button id='stop'>stop</button>
                 <div class="fixed-column">
                     <h2 class="center">Little bit of motion could be a huge difference</h2>
                     <p>Animated SVGs had been there for a while, but they have some limitations:</p>
@@ -33,18 +32,21 @@
             </div>
 
             <div id="gallery-view" style="display: none;">
-                <nav class="topbar">AN1M8</nav>
-                <h1>I am the galery</h1>
+                <div class="fixed-column">
+                    <h1>I am the galery</h1>
+                </div>
             </div>
 
             <div id="editor-view" style="display: none;">
-                <nav class="topbar">AN1M8</nav>
-                <h1>I am the editor</h1>
+                <div class="fixed-column">
+                    <h1>I am the editor</h1>
 
-                <form action="/upload" enctype="multipart/form-data" method="POST">
-                    <input id="file" name="file" type="file" />
-                    <input type="submit" value="upload" />
-                </form>
+                    <form action="/upload" enctype="multipart/form-data" method="POST">
+                        <input id="file" name="file" type="file" />
+                        <input type="submit" value="upload" />
+                    </form>
+
+                </div>
 
             </div>
 

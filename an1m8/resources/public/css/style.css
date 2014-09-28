@@ -42,6 +42,12 @@ button {
 .svg-wrapper object {
   display: inline;
   vertical-align: top;
+
+  pointer-events: none;
+}
+
+.click-i {
+  cursor: pointer;
 }
 
 .fill-w {
@@ -93,15 +99,15 @@ button {
 }
 
 
-#loader {
-  border-radius: 1em;
-}
-
 .fixed-column {
   max-width: 700px;
   margin: 0 auto;
 
   padding: 1em;
+}
+
+.bottom-hr {
+  border-bottom: 1px solid rgba(128,128,128,0.5);
 }
 
 .button {
@@ -133,3 +139,11 @@ button {
 	position:relative;
 	top:1px;
 }
+
+
+#loader {
+  border-radius: 1em;
+
+  height: 100%;
+}
+
