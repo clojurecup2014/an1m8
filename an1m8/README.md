@@ -1,6 +1,9 @@
 # an1m8
 
-FIXME
+http://an1m8.clojurecup.com/
+
+A clojure cup project for creating svg animations with core.async.
+
 
 ## Prerequisites
 
@@ -16,4 +19,4 @@ To start a web server for the application, run:
 
 ## License
 
-Copyright © 2014 FIXME
+Copyright © 2014 by ndrw, gorysko
