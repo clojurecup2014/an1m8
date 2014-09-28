@@ -5,10 +5,9 @@
             [an1m8.anim :as a]
             [an1m8.svg :as s]
             [an1m8.app :as app]
+            [an1m8.gallery :as gal]
 
-            [ajax.core :refer [GET POST
-                               edn-response-format
-                               edn-request-format]]))
+            ))
 
 ;
 ;
@@ -16,118 +15,22 @@
 ;
 ;
 
-(defn svg-init [id handler]
-  (let [el (d/by-id id)
-        svg (d/svg-doc el)]
 
-      (s/fix-viewBox! svg)
-      (d/scale-el! el 1)
-
-      (handler)))
-
-
-(defn- wait-for-svg[id handler]
-  (let [obj (d/by-id id)
-        svg (d/svg-doc obj)
-        f (partial svg-init id handler)]
-
-    (if (or (nil? svg)
-            (empty? (d/nodelist->coll (.querySelectorAll svg "svg"))))
-      (.addEventListener obj "load" f) ; no svg - add listener
-      (f))))
-
-
-
-;;;; gallery-view
-
-;; underscores to for visibiliness from js
-
-(defonce animations (atom {}))
-
-(defn run-animation [svg-id]
-  (let [status (get @animations svg-id)]
-    (println "ANIMATE " svg-id status)
-
-    (swap! animations merge
-           {svg-id
-            (if-not (:running status)
-              (merge status {:running
-                             (a/dev-animation (d/svg-doc (d/by-id svg-id)) status)})
-              (do
-                ; stop animations
-                (a/stop-animations (:running status))
-                (dissoc status :running))
-
-              )})))
-
-
-(defn init-gallery-svg[i el cfg]
-  (let [el (d/by-id (str "svg-" i))
-        svg (d/svg-doc el)]
-
-    (s/fix-viewBox! svg)
-    (d/scale-el! el 1)
-
-    (d/on-click! (str "run-svg-" i)
-       #(this-as b (run-animation (.getAttribute b "data-source"))))))
-
-
-(defn gallery-handler [response]
-  (let [container (d/by-id "anim-list")]
-    (doall (for [i (range (count response))]
-             (let [[svg-path cfg] (nth response i)
-                   el (.createElement js/document "div")
-                   id (str "svg-" i)
-                   ]
-
-
-               (d/set-html! el
-                            (str "<div id='svg-wrapper-" i "' class='bordered w_2_3' style='display: inline-block;' >
-                                 <object id='" id "'  class='fill-w' data='" svg-path "' type='image/svg+xml'></object></div>
-                                 <button id='run-" id "' data-source='" id "'>Run</button>"))
-               (.appendChild container el)
-               (wait-for-svg id (partial init-gallery-svg i el cfg))
-
-               (swap! animations assoc id {:cfg cfg})
-               ))
-           )
-    ))
-
-
-(defn error-handler [{:keys [status status-text]}]
-  (.log js/console (str "something bad happened: " status " " status-text)))
-
+;; underscores to for visibiliness from js in the template (for debugging)
 
 (defn ^:export init_gallery_page[]
-   (app/small-logo)
-   (GET "/gallery/" {
-              :handler gallery-handler
-              :error-handler error-handler
-              :response-format (edn-response-format)
-              :request-format (edn-request-format)
-              :keywords? true
-              :headers {"Cache-Control" "no-cache"}
-                     }))
-
+    (app/small-logo)
+    (gal/load-gallery))
 
 (defn ^:export init_editor_page[]
-  (app/small-logo)
-  )
-
-
+  (app/small-logo))
 
 (defn ^:export init_landing_page []
   (app/big-logo)
 
-  (d/on-click! "gallery-btn"
-               (fn[e]
-                 (app/show-viewport "gallery-view" init_gallery_page)
-                 false))
+  (d/on-click! "gallery-btn" #(do (app/show-viewport "gallery-view" init_gallery_page) false))
+  (d/on-click! "editor-btn"#(do (app/show-viewport "editor-view" init_editor_page) false)))
 
-  (d/on-click! "editor-btn"
-               (fn[e]
-                 (app/show-viewport "editor-view" init_editor_page)
-                 false)))
 
 
 (defn- app-loaded []
@@ -149,6 +52,4 @@
   (.log js/console "Junta Power!")
 
   (app/show-loader) ; ff fix
-  (wait-for-svg "logo-solid-1" app-loaded))
-
-
+  (s/wait-for-svg "logo-solid-1" app-loaded))

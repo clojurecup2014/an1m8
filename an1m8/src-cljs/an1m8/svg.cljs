@@ -38,4 +38,21 @@
           (.setAttribute root "viewBox" (str "0 0 " w " " h " "))))))
 
 
+(defn svg-init [id handler]
+  (let [el (d/by-id id)
+        svg (d/svg-doc el)]
 
+      (fix-viewBox! svg)
+      (d/scale-el! el 1)
+
+      (handler)))
+
+(defn wait-for-svg[id handler]
+  (let [obj (d/by-id id)
+        svg (d/svg-doc obj)
+        f (partial svg-init id handler)]
+
+    (if (or (nil? svg)
+            (empty? (d/nodelist->coll (.querySelectorAll svg "svg"))))
+      (.addEventListener obj "load" f) ; no svg - add listener
+      (f))))
