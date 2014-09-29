@@ -1,80 +1,31 @@
 (ns an1m8.anim
   "Animation core"
+  (:use [an1m8.f
+         :only [nth-val step-fn long-step float-step timing-f]])
 	(:require [cljs.core.async :as async
              	:refer [<! >! chan put! timeout close!]]
             [an1m8.dom :as dom]
-            [an1m8.colors :as colors]
-            )
-	(:require-macros [cljs.core.async.macros :refer [go]]))
+            [an1m8.colors :as colors])
+	(:require-macros [cljs.core.async.macros :refer [go]])
+  )
 
 
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;
-; stepping functions
-;
-
-(defn nth-val[start end n]
-  (let [N (if (< n 2) 2 (- n 1))]
-    (-> end (+ start) (/ N))))
-
-; usually curry this function for specified start/end/n
-(defn- step-fn[convert-fn start end n current]
-  (let [step (nth-val start end n)
-        op (if (<= start end) + -)]
-    (convert-fn (op start (* step current)))))
-
-(def long-step (partial step-fn long))
-
-(def float-step (partial step-fn identity))
-
-
-
-;;;;
-;
-; time function
-;
-(defn timing-f[params]
-  ; use other param than duration
-  (let [{id :id
-         duration :duration
-         :or {id :const duration 1000}} params]
-    (case id
-       :ln #(do
-              Math/log ( + % 333)
-            )
-       :rand #(do
-                 (* (rand-int %) 2000) ; todo
-               )
-
-       :sin #(do
-                 (+ 200 (Math/sin (+ % 100)))
-              )
-
-       :list #(nth (:duration params) (rem % (count (:duration params))))
-
-    ; same intervals of time between keyframe
-      :const (constantly duration)
-      (constantly duration)
-      )
-  ))
-
-
-;((timing-f {:duration 100}))
-;((timing-f {:duration 1000 :id :const}))
-
-
-
-;;;;;;;;;;;;;;;;;;
-;
-; kind of cycled step functions
+; keyframe function generators
 ;
 ; (step-function from to total) -> (fn [frame]) -> [:asc/:desc frame]
 ;                                  (fn [op frame]) -> does the animation
 
-(defn keyframe-f [total animation-f]
-  "creates a looped function (state machine?) that will go indefinitely from zero to total and vice versa.
+(defn keyframe-f
+  "Generator of the cycled keyframe function for N frames:
+  creates a looped function (state machine?) that will go indefinitely from zero to total and vice versa.
   (f) returns default op and starting frame, frame number is zero-based and op is :asc or :desc keyword
   (f frame) executes the animation-f
   (f op frame) will returns next op and frame "
+  [total animation-f]
   (fn ([] [:asc 0])
       ([frame]
        (animation-f frame))

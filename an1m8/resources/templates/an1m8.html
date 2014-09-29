@@ -54,6 +54,12 @@
 
             </div>
 
+            <div id="dev" style="display: none;" class="fixed-column">
+                <div class="svg-wrapper fill-w">
+                    <object id="test-svg" class="fill-w" data="/svg/logo_solid_1.svg" type="image/svg+xml" ></object>
+                </div>
+            </div>
+
             <footer class="center">&copy; 2014, by <a href="https://twitter.com/__ndrw">@ndrew</a> & <a href="https://twitter.com/gorysko">@gorysko</a> for <a href="https://clojurecup.com">ClojureCup</a>.</footer>
         </div>
 
@@ -70,8 +76,8 @@
         <script type="text/javascript">
             var context = "{{servlet-context}}";
 
-            var initial_view = ""; // "gallery-view";
-            var initial_action = ""; // "init_gallery_page";
+            var initial_view = "dev"; // "gallery-view";
+            var initial_action = "dev"; // "init_gallery_page";
 
             an1m8.app.run(an1m8.core.app_fn);
         </script>

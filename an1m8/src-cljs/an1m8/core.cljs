@@ -91,3 +91,18 @@
 
   (app/show-loader) ; ff fix
   (s/wait-for-svg LOGO-ID app-loaded))
+
+
+;
+; dev
+;
+
+(defn dev-handler []
+  (println "foo")
+  )
+
+
+(defn dev []
+  (app/small-logo)
+
+  (s/wait-for-svg "test-svg" dev-handler))
