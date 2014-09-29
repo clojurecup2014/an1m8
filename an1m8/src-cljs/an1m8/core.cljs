@@ -98,8 +98,15 @@
 ;
 
 (defn dev-handler []
-  (println "foo")
-  )
+  (let [svg (d/svg-by-id "test-svg")
+        timer-f (an1m8.f/timing-f {})
+        animate-f (a/keyframe-f 10 #(do
+                                      (println %)
+                                      :nil
+                                      ))
+        consume-f println]
+
+    (a/an1m timer-f animate-f consume-f)))
 
 
 (defn dev []
